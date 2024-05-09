@@ -1,0 +1,12 @@
+{
+	"editor.formatOnSave": true,
+	"editor.codeActionsOnSave": {
+		"source.organizeImports": "always",
+		"source.fixAll.eslint": "always"
+	},
+	"typescript.preferences.importModuleSpecifier": "relative",
+	"files.associations": {
+		"*.css": "tailwindcss"
+	},
+	"tailwindCSS.classAttributes": ["class", "className", "tw.*"]
+}
