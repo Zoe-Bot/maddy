@@ -4,6 +4,13 @@ export const routes = {
 		single: (id: string) => `/${id}`,
 		statistics: (id: string) => `/${id}/statistics`,
 	},
+	admin: {
+		slideDecks: {
+			overview: '/',
+			single: (id: string) => `/${id}`,
+			statistics: (id: string) => `/${id}/statistics`,
+		},
+		statistics: '/admin/statistics',
+	},
 	login: '/login',
-	statistics: '/statistics',
 }
