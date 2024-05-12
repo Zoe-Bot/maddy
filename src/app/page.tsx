@@ -1,10 +1,7 @@
-import { PrismaClient } from '@prisma/client'
 import Link from 'next/link'
 import { routes } from '../services/routes'
 
-export const prisma = new PrismaClient()
-
-export default async function SlidesOverview() {
+export default function SlidesOverview() {
 	return (
 		<main className="container py-6">
 			<h1 className="font-bold">Foliensatzübersicht</h1>
