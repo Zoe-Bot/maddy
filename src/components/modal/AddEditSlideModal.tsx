@@ -3,7 +3,7 @@ import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { IconButton, Modal, TextField, TextareaAutosize } from '@mui/material'
 import { Field, FieldProps, Form, Formik } from 'formik'
 import * as yup from 'yup'
-import { addSlideDeck } from '../../services/image'
+import { addSlideSet } from '../../services/image'
 import { Button } from '../button/Button'
 import { FormError } from '../errors/FormError'
 import { FileUpload } from '../form/FileUpload'
@@ -14,22 +14,23 @@ type Props = {
 	onClose: () => void
 }
 
-export type SlideDeckDto = {
+export type SlideSetDto = {
 	pdf: File | null
 	name: string
 	description?: string
 }
 
 export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose }) => {
-	const initialValues: SlideDeckDto = {
+	const initialValues: SlideSetDto = {
 		pdf: null,
 		name: '',
 		description: '',
 	}
 
 	const validationSchema = yup.object().shape({
-		name: yup.string().min(3, 'Name muss mindestens 3 Zeichen haben.').required('Name ist erforderlich.'),
-		image: yup.string().required('Pdf ist erforderlich.'),
+		name: yup.string().min(3, 'Name muss mindestens 3 Zeichen haben.').max(70, 'Name darf maximal 70 Zeichen haben.').required('Name ist erforderlich.'),
+		pdf: yup.mixed().required('Pdf Datei ist erforderlich.'),
+		description: yup.string().max(500, 'Beschreibung darf maximal 500 Zeichen haben.'),
 	})
 
 	return (
@@ -45,9 +46,7 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose }) => 
 				<Formik
 					initialValues={initialValues}
 					onSubmit={(values) => {
-						console.log(values)
-
-						addSlideDeck(JSON.parse(JSON.stringify(values)))
+						addSlideSet(JSON.parse(JSON.stringify(values)))
 						onClose()
 					}}
 					validationSchema={validationSchema}
