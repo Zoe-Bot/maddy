@@ -13,7 +13,7 @@ type LabelProps = {
  */
 export const Label: React.FC<LabelProps> = ({ name, children, labelRequired = false }) => (
 	<>
-		<label htmlFor={name} className="text-gray-700 text-sm mb-1">
+		<label htmlFor={name} className="block text-gray-700 text-sm mb-1">
 			{children}
 			{labelRequired && <span className="text-primary-600 ml-1">*</span>}
 		</label>

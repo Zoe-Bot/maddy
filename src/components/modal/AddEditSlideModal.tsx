@@ -62,7 +62,14 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose }) => 
 								<Field name="name">
 									{({ field, form }: FieldProps) => (
 										<div className="mb-2 md:mb-4">
-											<TextField {...field} label="Name" variant="filled" className="[&_.MuiFilledInput-root]:bg-gray-100" fullWidth error={form.touched.name && Boolean(form.errors.name)} />
+											<TextField
+												{...field}
+												label="Name"
+												variant="filled"
+												className="[&_.MuiFilledInput-root]:bg-gray-100 [&_.MuiFormLabel-root]:text-gray-400"
+												fullWidth
+												error={form.touched.name && Boolean(form.errors.name)}
+											/>
 											<FormError field="name" />
 										</div>
 									)}
@@ -74,7 +81,7 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose }) => 
 										<TextareaAutosize
 											{...field}
 											placeholder="Kurze Beschreibung zum Inhalt des Foliensatzes"
-											className="placeholder:text-sm bg-gray-100 rounded-md px-3 py-2 resize-none w-full mb-2 md:mb-4"
+											className="bg-gray-100 rounded-md px-3 py-2 resize-none w-full mb-2 md:mb-4"
 											minRows={3}
 										/>
 									)}
