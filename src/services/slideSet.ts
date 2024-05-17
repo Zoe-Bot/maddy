@@ -10,7 +10,7 @@ export async function addSlideSet(newSlideSet: SlideSetDto) {
 	})
 
 	// Create a new slide deck in the database
-	const slideDeck = await prisma.slideset.create({
+	const createdSlideSet = await prisma.slideset.create({
 		data: {
 			name: newSlideSet.name,
 			description: newSlideSet.description,
@@ -18,5 +18,5 @@ export async function addSlideSet(newSlideSet: SlideSetDto) {
 		},
 	})
 
-	console.info(`Slide set "${slideDeck.name}" added`)
+	console.info(`Slide set "${createdSlideSet.name}" added`)
 }
