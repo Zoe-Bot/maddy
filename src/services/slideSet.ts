@@ -20,3 +20,8 @@ export async function addSlideSet(newSlideSet: SlideSetDto) {
 
 	console.info(`Slide set "${createdSlideSet.name}" added`)
 }
+
+export async function getSlideSets() {
+	const slideSets = await prisma.slideset.findMany()
+	return slideSets
+}
