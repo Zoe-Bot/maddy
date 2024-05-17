@@ -8,9 +8,26 @@ datasource db {
     directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-model User {
-    id        Int       @id @default(autoincrement())
-    name      String
-    email     String    @unique
-    createdAt DateTime? @default(now())
+model Slideset {
+    id          Int        @id @default(autoincrement())
+    name        String
+    description String?
+    pdfUrl      String
+    uploadDate  DateTime   @default(now())
+    Feedback    Feedback[]
+}
+
+model Feedback {
+    id           Int          @id @default(autoincrement())
+    slideset     Slideset     @relation(fields: [slidesetId], references: [id])
+    slidesetId   Int
+    page         Int
+    userId       Int
+    feedbackType FeedbackType
+    timestamp    DateTime     @default(now())
+}
+
+enum FeedbackType {
+    QUESTION
+    NEGATIVE
 }
