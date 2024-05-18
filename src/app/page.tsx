@@ -4,6 +4,8 @@ import { Chip } from '../components/ui/Chip'
 import { routes } from '../services/routes'
 import { getSlideSets } from '../services/slideSet'
 
+// Used that the page updates when a slide set is added
+export const revalidate = 0
 export default async function SlidesOverview() {
 	const slideSets = await getSlideSets()
 
