@@ -15,7 +15,6 @@ export async function POST(request: Request): Promise<NextResponse> {
 		const jsonResponse = await handleUpload({
 			body,
 			request,
-			// @ts-ignore
 			onBeforeGenerateToken: async (pathname, clientPayload) => {
 				if (clientPayload === null) {
 					throw Error('Client payload is required')
