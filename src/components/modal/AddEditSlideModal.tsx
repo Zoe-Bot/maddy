@@ -1,9 +1,8 @@
-'use client'
 import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { IconButton, Modal, TextField, TextareaAutosize } from '@mui/material'
+import { upload } from '@vercel/blob/client'
 import { Field, FieldProps, Form, Formik } from 'formik'
 import * as yup from 'yup'
-import { addSlideSet } from '../../services/slideSet'
 import { Button } from '../button/Button'
 import { FormError } from '../errors/FormError'
 import { FileUpload } from '../form/FileUpload'
@@ -45,8 +44,13 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose }) => 
 
 				<Formik
 					initialValues={initialValues}
-					onSubmit={(values) => {
-						addSlideSet(JSON.parse(JSON.stringify(values)))
+					onSubmit={async (values) => {
+						await upload(values.name, values.pdf!, {
+							access: 'public',
+							handleUploadUrl: '/api/slidesets',
+							clientPayload: JSON.stringify({ password: '1234', name: values.name, description: values.description }),
+						})
+
 						onClose()
 					}}
 					validationSchema={validationSchema}

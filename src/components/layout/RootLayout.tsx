@@ -2,6 +2,9 @@
 import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material'
 import { Inter } from 'next/font/google'
 import React from 'react'
+import { pdfjs } from 'react-pdf'
+import 'react-pdf/dist/Page/AnnotationLayer.css'
+import 'react-pdf/dist/Page/TextLayer.css'
 import { Footer } from './Footer'
 import { Navbar } from './Navbar'
 
@@ -21,6 +24,8 @@ const theme = createTheme({
 		},
 	},
 })
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.js', import.meta.url).toString()
 
 export const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
 	return (

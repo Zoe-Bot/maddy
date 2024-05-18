@@ -1,8 +1,8 @@
 export const routes = {
 	slideDecks: {
 		overview: '/',
-		single: (id: string) => `/${id}`,
-		statistics: (id: string) => `/${id}/statistics`,
+		single: (id: number) => `/${id}`,
+		statistics: (id: number) => `/${id}/statistics`,
 	},
 	admin: {
 		slideDecks: {
