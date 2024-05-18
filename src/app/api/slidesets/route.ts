@@ -1,11 +1,5 @@
-import { NextResponse } from 'next/server'
-import { SlideSetDto } from '../../../components/modal/AddEditSlideModal'
-
-type SlideSetRequest = {
-	body: SlideSetDto
-} & Request
-
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
+import { NextResponse } from 'next/server'
 import { prisma } from '../../../services/client'
 
 export async function POST(request: Request): Promise<NextResponse> {
@@ -19,6 +13,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 				if (clientPayload === null) {
 					throw Error('Client payload is required')
 				}
+
 				const clientPayloadData = JSON.parse(clientPayload)
 
 				if (clientPayloadData.password !== '1234') {

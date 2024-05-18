@@ -2,7 +2,7 @@ export const routes = {
 	slideDecks: {
 		overview: '/',
 		single: (id: number) => `/${id}`,
-		statistics: (id: string) => `/${id}/statistics`,
+		statistics: (id: number) => `/${id}/statistics`,
 	},
 	admin: {
 		slideDecks: {
