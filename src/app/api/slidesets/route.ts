@@ -46,7 +46,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 						},
 					})
 				} catch (error) {
-					throw new Error('Could not update user')
+					throw new Error('Could not create slide set in the database')
 				}
 			},
 		})

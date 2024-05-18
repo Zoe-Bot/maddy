@@ -45,24 +45,12 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose }) => 
 				<Formik
 					initialValues={initialValues}
 					onSubmit={async (values) => {
-						const pdf = await values.pdf!.arrayBuffer()
-						// addSlideSet(values.name, pdf, values.description)
-
-						const blob = await upload(values.name, values.pdf!, {
+						await upload(values.name, values.pdf!, {
 							access: 'public',
 							handleUploadUrl: '/api/slidesets',
-							clientPayload: JSON.stringify({ password: '1234' }),
+							clientPayload: JSON.stringify({ password: '1234', name: values.name, description: values.description }),
 						})
 
-						console.log(blob.url)
-
-						// await fetch('/api/slidesets', {
-						// 	method: 'POST',
-						// 	body: JSON.stringify(values),
-						// 	headers: {
-						// 		'Content-Type': 'application/json',
-						// 	},
-						// })
 						onClose()
 					}}
 					validationSchema={validationSchema}
