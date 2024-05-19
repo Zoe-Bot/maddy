@@ -24,7 +24,7 @@ const SinglePagePdfRender: React.FC<Props> = ({ pdfUrl, children }) => {
 
 	const parentRef = useRef<HTMLDivElement | null>(null)
 
-	const [pageWidth, setPageWidth] = useState(1200)
+	const [pageWidth, setPageWidth] = useState(1000)
 	const [totalPages, setTotalPages] = useState<number>()
 
 	useEffect(() => {
