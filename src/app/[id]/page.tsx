@@ -4,18 +4,18 @@ import { Button } from '../../components/button/Button'
 import SinglePagePdfRender from '../../components/layout/SinglePagePdfRender'
 import { getSlideSet } from '../../services/slideSet'
 
-type Params = { params: { id: string; page: string } }
+type Params = { params: { id: string } }
 
 export default async function SingleSlide({ params }: Params) {
-	const { id, page } = params
-	const slideSet = await getSlideSet(Number(id))
+	const { id } = params
+	const slideSet = await getSlideSet(parseInt(id))
 
 	if (!slideSet) {
 		return notFound()
 	}
 
 	return (
-		<SinglePagePdfRender id={id} pdfUrl={slideSet.pdfUrl} page={page}>
+		<SinglePagePdfRender pdfUrl={slideSet.pdfUrl}>
 			<h1 className="font-bold text-xl md:text-2xl mt-5 xl:mt-20">{slideSet?.name}</h1>
 			<p className="text-gray-500 mb-4 xl:mb-10">{slideSet.uploadDate.toLocaleDateString()}</p>
 
