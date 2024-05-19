@@ -13,7 +13,13 @@ export const routes = {
 	admin: {
 		slideDecks: {
 			overview: '/',
-			single: (id: string) => `/${id}`,
+			single: (id: number, page?: number) => {
+				if (!page) {
+					return `/admin/${id}?page=1`
+				}
+
+				return `/admin/${id}?page=${page}`
+			},
 			statistics: (id: string) => `/${id}/statistics`,
 		},
 		statistics: '/admin/statistics',
