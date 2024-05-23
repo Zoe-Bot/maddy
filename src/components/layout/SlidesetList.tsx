@@ -9,6 +9,7 @@ type Props = {
 	isAdmin?: boolean
 }
 
+export const revalidate = 0
 export const SlideSetList: React.FC<Props> = async ({ isAdmin }) => {
 	const slideSets = await getSlideSets()
 

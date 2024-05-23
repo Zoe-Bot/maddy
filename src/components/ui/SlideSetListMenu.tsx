@@ -4,12 +4,14 @@ import { Divider, IconButton, Menu, MenuItem } from '@mui/material'
 import Link from 'next/link'
 import { useState } from 'react'
 import { routes } from '../../services/routes'
+import { DeleteModal } from '../modal/DeleteModal'
 
 type Props = {
 	id: number
 }
 
 export const SlideSetListMenu: React.FC<Props> = ({ id }) => {
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 	const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null)
 	const isOpen = Boolean(anchorElement)
 
@@ -26,6 +28,8 @@ export const SlideSetListMenu: React.FC<Props> = ({ id }) => {
 			<IconButton onClick={handleClick} aria-controls={isOpen ? 'account-menu' : undefined} aria-haspopup="true" aria-expanded={isOpen ? 'true' : undefined}>
 				<EllipsisVerticalIcon className="w-6 h-6 text-gray-400" />
 			</IconButton>
+
+			{isDeleteModalOpen && <DeleteModal id={id} isModalOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} />}
 
 			<Menu
 				anchorEl={anchorElement}
@@ -54,7 +58,12 @@ export const SlideSetListMenu: React.FC<Props> = ({ id }) => {
 					Bearbeiten
 				</MenuItem>
 				<Divider className="mx-4" />
-				<MenuItem className="hover:bg-gray-200 text-red-500 px-6 mb-2" onClick={handleClose}>
+				<MenuItem
+					className="hover:bg-gray-200 text-red-500 px-6 mb-2"
+					onClick={() => {
+						setIsDeleteModalOpen(true)
+					}}
+				>
 					Löschen
 				</MenuItem>
 			</Menu>
