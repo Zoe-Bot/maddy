@@ -22,6 +22,9 @@ const theme = createTheme({
 			main: '#eb3f3f',
 		},
 	},
+	typography: {
+		fontFamily: 'Inter, sans-serif',
+	},
 })
 
 export const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {

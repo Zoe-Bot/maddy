@@ -3,7 +3,7 @@ import { IconButton } from '@mui/material'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { routes } from '../../services/routes'
+import { routes } from '../../../services/routes'
 
 type NavLink = {
 	shouldDisplay: boolean
