@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { routes } from '../../services/routes'
+import { routes } from '../../../services/routes'
 
 export const Navbar: React.FC = () => {
 	return (
