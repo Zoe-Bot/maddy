@@ -1,8 +1,9 @@
 import { XMarkIcon } from '@heroicons/react/20/solid'
-import { Params } from 'next/dist/shared/lib/router/utils/route-matcher'
 import { notFound } from 'next/navigation'
 import SinglePagePdfRender from '../../../components/layout/SinglePagePdfRender'
 import { getSlideSet } from '../../../services/slideSet'
+
+type Params = { params: { id: string } }
 
 export default async function SingleSlide({ params }: Params) {
 	const { id } = params
