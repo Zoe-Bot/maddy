@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { getIsAuthenticated, logout } from '../../../services/auth'
 import { routes } from '../../../services/routes'
 
-export type NavLink = {
+type NavLink = {
 	shouldDisplay: boolean
 	to?: string
 	onClick?: () => void
