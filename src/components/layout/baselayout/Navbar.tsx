@@ -1,7 +1,7 @@
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import { IconButton } from '@mui/material'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { routes } from '../../../services/routes'
 
@@ -14,6 +14,7 @@ type NavLink = {
 
 export const Navbar: React.FC = () => {
 	const router = useRouter()
+	const pathName = usePathname()
 
 	// Local States
 	const [isNavMobileOpen, setIsNavMobileOpen] = useState<boolean>(false)
@@ -51,11 +52,17 @@ export const Navbar: React.FC = () => {
 				</div>
 
 				<ul className={`${isNavMobileOpen ? 'block' : 'hidden'} md:flex items-center gap-4 w-full space-y-2 md:space-y-0`}>
-					<li className="mr-auto">
+					<li className={`mr-auto ${pathName === routes.slideDecks.overview ? 'text-primary-600 pointer-events-none' : ''}`}>
+						{/* // TODO: Add link to admin when logged in */}
 						<Link href={routes.slideDecks.overview}>Übersicht</Link>
 					</li>
 					{navLinks.map(
-						(link) => link.shouldDisplay && <li key={link.text}>{link.to ? <Link href={link.to ? link.to : '#'}>{link.text}</Link> : <button onClick={link.onClick}>{link.text}</button>}</li>,
+						(link) =>
+							link.shouldDisplay && (
+								<li key={link.text} className={`${pathName === link.to ? 'text-primary-600 pointer-events-none' : ''}`}>
+									{link.to ? <Link href={link.to ? link.to : '#'}>{link.text}</Link> : <button onClick={link.onClick}>{link.text}</button>}
+								</li>
+							),
 					)}
 				</ul>
 			</div>
