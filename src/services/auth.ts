@@ -1,5 +1,5 @@
 'use server'
-import { SignJWT } from 'jose'
+import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { routes } from './routes'
@@ -25,4 +25,24 @@ export async function setLoginCookie(password: string): Promise<void> {
 		httpOnly: true,
 		secure: true,
 	})
+}
+
+export async function logout(): Promise<void> {
+	cookies().delete('auth')
+	redirect(routes.login)
+}
+
+export async function getIsAuthenticated(): Promise<boolean> {
+	const cookie = cookies().get('auth')
+
+	if (cookie) {
+		try {
+			await jwtVerify(cookie.value, new TextEncoder().encode(JWT_SECRET))
+			return true
+		} catch (err) {
+			console.error('err', err)
+		}
+	}
+
+	return false
 }
