@@ -32,7 +32,7 @@ export const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
 		<StyledEngineProvider injectFirst>
 			<ThemeProvider theme={theme}>
 				<html lang="en">
-					<body className={inter.className}>
+					<body className={`${inter.className} flex flex-col min-h-screen h-screen`}>
 						<Navbar />
 						{children}
 						<Footer />
