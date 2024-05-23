@@ -1,16 +1,19 @@
+import { ArrowPathIcon } from '@heroicons/react/20/solid'
 import { ButtonBase } from '@mui/material'
 
 type Props = {
 	kind?: 'primary' | 'secondary' | 'tertiary'
 	Icon?: React.ElementType
 	children: React.ReactNode
+	color?: 'primary' | 'red' | 'gray'
+	loading?: boolean
 } & React.ButtonHTMLAttributes<HTMLButtonElement>
 
-export const Button: React.FC<Props> = ({ Icon, children, kind = 'primary', ...props }) => {
-	const twPrimaryClassNames = 'border-2 border-solid border-primary-600 hover:border-primary-700 bg-primary-600 hover:bg-primary-700 focus:bg-primary-800 text-white font-semibold py-3 px-7 rounded-lg'
-	const twSecondaryClassNames =
-		'border-2 border-solid border-primary-600 hover:border-transparent focus:border-transparent hover:bg-primary-700 focus:bg-primary-800 text-primary-600 hover:text-white focus:text-white font-semibold py-3 px-7 rounded-lg'
-	const twTertiaryClassNames = 'text-primary-600 hover:text-primary-700 focus:text-primary-800 font-semibold px-2 py-2'
+export const Button: React.FC<Props> = ({ Icon, children, kind = 'primary', color = 'primary', loading, ...props }) => {
+	props.disabled = loading || props.disabled
+	const twPrimaryClassNames = `border-2 border-solid border-${color}-600 hover:border-${color}-700 focus:border-${color}-800 bg-${color}-600 hover:bg-${color}-700 focus:bg-${color}-800 text-white font-semibold py-3 px-7 rounded-lg`
+	const twSecondaryClassNames = `border-2 border-solid border-${color}-600 hover:border-transparent focus:border-transparent hover:bg-${color}-700 focus:bg-${color}-800 text-${color}-600 hover:text-white focus:text-white font-semibold py-3 px-7 rounded-lg`
+	const twTertiaryClassNames = `text-${color}-600 hover:text-${color}-700 focus:text-${color}-800 font-semibold px-2 py-2`
 
 	return (
 		<ButtonBase
@@ -18,7 +21,7 @@ export const Button: React.FC<Props> = ({ Icon, children, kind = 'primary', ...p
 			disableRipple
 			className={`${kind === 'primary' ? twPrimaryClassNames : ''} ${kind === 'secondary' ? twSecondaryClassNames : ''} ${kind === 'tertiary' ? twTertiaryClassNames : ''} disabled:opacity-70`}
 		>
-			{Icon && <Icon className="w-6 h-6 mr-2" />}
+			{Icon && loading ? <ArrowPathIcon className="w-6 h-6 animate-spin" /> : Icon && <Icon className="w-6 h-6" />}
 			{children}
 		</ButtonBase>
 	)

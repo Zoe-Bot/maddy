@@ -32,7 +32,7 @@ export const SlideSetList: React.FC<Props> = async ({ isAdmin }) => {
 							</div>
 						</Link>
 
-						{isAdmin && <SlideSetListMenu id={slideSet.id} />}
+						{isAdmin && <SlideSetListMenu slideSet={slideSet} />}
 					</div>
 				))}
 			</div>

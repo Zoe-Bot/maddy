@@ -2,6 +2,7 @@ import { PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { IconButton, Modal, TextField, TextareaAutosize } from '@mui/material'
 import { upload } from '@vercel/blob/client'
 import { Field, FieldProps, Form, Formik } from 'formik'
+import { useRouter } from 'next/navigation'
 import * as yup from 'yup'
 import { Button } from '../button/Button'
 import { FormError } from '../errors/FormError'
@@ -20,6 +21,7 @@ export type SlideSetDto = {
 }
 
 export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose }) => {
+	const router = useRouter()
 	const initialValues: SlideSetDto = {
 		pdf: null,
 		name: '',
@@ -51,6 +53,7 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose }) => 
 							clientPayload: JSON.stringify({ password: '1234', name: values.name, description: values.description }),
 						})
 
+						router.refresh()
 						onClose()
 					}}
 					validationSchema={validationSchema}
@@ -91,16 +94,11 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose }) => 
 								</Field>
 
 								<div className="flex flex-col md:flex-row justify-between">
-									<Button kind="tertiary" onClick={() => formik.resetForm()} type="button" className="text-primary-500 hover:bg-transparent hover:text-primary-600 normal-case rounded-none py-2">
+									<Button kind="tertiary" onClick={() => formik.resetForm()} type="button">
 										Zurücksetzen
 									</Button>
 
-									<Button
-										type="submit"
-										disabled={!formik.isValid || formik.isSubmitting}
-										Icon={PlusIcon}
-										className="bg-primary-500 hover:bg-primary-600 disabled:bg-opacity-70 disabled:text-white disabled:text-opacity-70 text-white normal-case rounded-none px-5 py-2"
-									>
+									<Button type="submit" disabled={!formik.isValid || formik.isSubmitting} Icon={PlusIcon}>
 										Foliensatz hinzufügen
 									</Button>
 								</div>
