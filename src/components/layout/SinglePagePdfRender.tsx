@@ -8,14 +8,17 @@ import { routes } from '../../services/routes'
 type Props = {
 	children: React.ReactNode
 	pdfUrl: string
+	isAdmin?: boolean
 }
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.js', import.meta.url).toString()
 
-const SinglePagePdfRender: React.FC<Props> = ({ pdfUrl, children }) => {
+const SinglePagePdfRender: React.FC<Props> = ({ pdfUrl, children, isAdmin }) => {
 	const router = useRouter()
 	const params = useParams()
 	const searchParams = useSearchParams()
+
+	const baseUrl = isAdmin ? routes.admin.slideDecks.single : routes.slideDecks.single
 
 	const id = params.id
 	const page = searchParams.get('page') || '1'
@@ -59,7 +62,7 @@ const SinglePagePdfRender: React.FC<Props> = ({ pdfUrl, children }) => {
 						count={totalPages}
 						page={Number(page)}
 						onChange={(_, number) => {
-							router.push(routes.slideDecks.single(Number(id), number))
+							router.push(baseUrl(Number(id), number))
 						}}
 					/>
 				</div>
