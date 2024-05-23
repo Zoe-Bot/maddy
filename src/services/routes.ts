@@ -8,11 +8,10 @@ export const routes = {
 
 			return `/${id}?page=${page}`
 		},
-		statistics: (id: number) => `/${id}/statistics`,
 	},
 	admin: {
 		slideDecks: {
-			overview: '/',
+			overview: '/admin',
 			single: (id: number, page?: number) => {
 				if (!page) {
 					return `/admin/${id}?page=1`

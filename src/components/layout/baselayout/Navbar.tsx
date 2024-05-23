@@ -1,8 +1,9 @@
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import { IconButton } from '@mui/material'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { getIsAuthenticated, logout } from '../../../services/auth'
 import { routes } from '../../../services/routes'
 
 type NavLink = {
@@ -13,26 +14,29 @@ type NavLink = {
 }
 
 export const Navbar: React.FC = () => {
-	const router = useRouter()
 	const pathName = usePathname()
 
-	// Local States
 	const [isNavMobileOpen, setIsNavMobileOpen] = useState<boolean>(false)
+	const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
+
+	useEffect(() => {
+		getIsAuthenticated().then((isAuthenticated) => setIsAuthenticated(isAuthenticated))
+	}, [pathName])
 
 	const navLinks: NavLink[] = [
 		{
-			shouldDisplay: true,
+			shouldDisplay: !isAuthenticated,
 			to: routes.login,
 			text: 'Anmelden als Dozent',
 		},
 		{
-			shouldDisplay: false,
+			shouldDisplay: isAuthenticated,
 			to: routes.admin.statistics,
 			text: 'Statistiken',
 		},
 		{
-			shouldDisplay: false,
-			onClick: () => '',
+			shouldDisplay: isAuthenticated,
+			onClick: () => logout(),
 			text: 'Abmelden',
 		},
 	]
@@ -45,15 +49,13 @@ export const Navbar: React.FC = () => {
 						<Link href={routes.slideDecks.overview}>Maddy</Link>
 					</h1>
 
-					{/* Mobile menu button */}
 					<IconButton className="block md:hidden" onClick={() => setIsNavMobileOpen((isNavMobileOpen) => !isNavMobileOpen)}>
 						<Bars3Icon className="w-5 h-5" />
 					</IconButton>
 				</div>
 
 				<ul className={`${isNavMobileOpen ? 'block' : 'hidden'} md:flex items-center gap-4 w-full space-y-2 md:space-y-0`}>
-					<li className={`mr-auto ${pathName === routes.slideDecks.overview ? 'text-primary-600 pointer-events-none' : ''}`}>
-						{/* // TODO: Add link to admin when logged in */}
+					<li className={`mr-auto ${pathName === routes.slideDecks.overview || pathName === routes.admin.slideDecks.overview ? 'text-primary-600 pointer-events-none' : ''}`}>
 						<Link href={routes.slideDecks.overview}>Übersicht</Link>
 					</li>
 					{navLinks.map(
