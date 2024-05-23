@@ -20,7 +20,7 @@ export const routes = {
 
 				return `/admin/${id}?page=${page}`
 			},
-			statistics: (id: string) => `/${id}/statistics`,
+			statistics: (id: number) => `/admin/${id}/statistics`,
 		},
 		statistics: '/admin/statistics',
 	},
