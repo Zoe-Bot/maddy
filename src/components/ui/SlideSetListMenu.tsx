@@ -1,16 +1,17 @@
 'use client'
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid'
 import { Divider, IconButton, Menu, MenuItem } from '@mui/material'
+import { Slideset } from '@prisma/client'
 import Link from 'next/link'
 import { useState } from 'react'
 import { routes } from '../../services/routes'
 import { DeleteModal } from '../modal/DeleteModal'
 
 type Props = {
-	id: number
+	slideSet: Slideset
 }
 
-export const SlideSetListMenu: React.FC<Props> = ({ id }) => {
+export const SlideSetListMenu: React.FC<Props> = ({ slideSet }) => {
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 	const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null)
 	const isOpen = Boolean(anchorElement)
@@ -29,7 +30,7 @@ export const SlideSetListMenu: React.FC<Props> = ({ id }) => {
 				<EllipsisVerticalIcon className="w-6 h-6 text-gray-400" />
 			</IconButton>
 
-			{isDeleteModalOpen && <DeleteModal id={id} isModalOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} />}
+			{isDeleteModalOpen && <DeleteModal slideSet={slideSet} isModalOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} />}
 
 			<Menu
 				anchorEl={anchorElement}
@@ -42,12 +43,12 @@ export const SlideSetListMenu: React.FC<Props> = ({ id }) => {
 				className="[&_.MuiMenu-paper]:shadow-none [&_.MuiMenu-paper]:bg-gray-100 [&_.MuiMenu-paper]:text-gray-500"
 			>
 				<MenuItem className="hover:bg-gray-200 px-6 mt-2">
-					<Link href={routes.admin.slideDecks.single(id)} className="w-full">
+					<Link href={routes.admin.slideDecks.single(slideSet.id)} className="w-full">
 						Anzeigen
 					</Link>
 				</MenuItem>
 				<MenuItem className="hover:bg-gray-200 px-6" onClick={handleClose}>
-					<Link href={routes.admin.slideDecks.statistics(id)} className="w-full">
+					<Link href={routes.admin.slideDecks.statistics(slideSet.id)} className="w-full">
 						Statistiken
 					</Link>
 				</MenuItem>

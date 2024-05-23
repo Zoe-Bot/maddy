@@ -9,7 +9,6 @@ type Props = {
 	isAdmin?: boolean
 }
 
-export const revalidate = 0
 export const SlideSetList: React.FC<Props> = async ({ isAdmin }) => {
 	const slideSets = await getSlideSets()
 
@@ -33,7 +32,7 @@ export const SlideSetList: React.FC<Props> = async ({ isAdmin }) => {
 							</div>
 						</Link>
 
-						{isAdmin && <SlideSetListMenu id={slideSet.id} />}
+						{isAdmin && <SlideSetListMenu slideSet={slideSet} />}
 					</div>
 				))}
 			</div>

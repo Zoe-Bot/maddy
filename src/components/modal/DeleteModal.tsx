@@ -1,15 +1,16 @@
 import { TrashIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { IconButton, Modal } from '@mui/material'
+import { Slideset } from '@prisma/client'
 import { deleteSlideSet } from '../../services/slideSet'
 import { Button } from '../button/Button'
 
 type Props = {
 	isModalOpen: boolean
 	onClose: () => void
-	id: number
+	slideSet: Slideset
 }
 
-export const DeleteModal: React.FC<Props> = ({ isModalOpen, onClose, id }) => {
+export const DeleteModal: React.FC<Props> = ({ isModalOpen, onClose, slideSet }) => {
 	return (
 		<Modal open={isModalOpen} onClose={onClose}>
 			<div className="bg-white flex flex-col absolute top-[50%] left-[50%] -translate-y-1/2 -translate-x-1/2 w-[90vw] md:w-[600px] overflow-hidden rounded-2xl p-6 md:p-10">
@@ -27,7 +28,7 @@ export const DeleteModal: React.FC<Props> = ({ isModalOpen, onClose, id }) => {
 
 					<Button
 						onClick={() => {
-							deleteSlideSet(id)
+							deleteSlideSet(slideSet)
 							onClose()
 						}}
 						Icon={TrashIcon}

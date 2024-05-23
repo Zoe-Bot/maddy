@@ -1,8 +1,6 @@
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
-import { revalidatePath } from 'next/cache'
 import { NextResponse } from 'next/server'
 import { prisma } from '../../../services/client'
-import { routes } from '../../../services/routes'
 
 export async function POST(request: Request): Promise<NextResponse> {
 	const body = (await request.json()) as HandleUploadBody
@@ -46,9 +44,6 @@ export async function POST(request: Request): Promise<NextResponse> {
 				}
 			},
 		})
-
-		revalidatePath(routes.admin.slideDecks.overview)
-		revalidatePath(routes.slideDecks.overview)
 
 		return NextResponse.json(jsonResponse)
 	} catch (error) {
