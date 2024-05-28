@@ -21,7 +21,7 @@ export const Button: React.FC<Props> = ({ Icon, children, kind = 'primary', colo
 			disableRipple
 			className={`${kind === 'primary' ? twPrimaryClassNames : ''} ${kind === 'secondary' ? twSecondaryClassNames : ''} ${kind === 'tertiary' ? twTertiaryClassNames : ''} disabled:opacity-70`}
 		>
-			{Icon && loading ? <ArrowPathIcon className="w-6 h-6 animate-spin" /> : Icon && <Icon className="w-6 h-6" />}
+			{Icon && loading ? <ArrowPathIcon className="w-6 h-6 animate-spin mr-2" /> : Icon && <Icon className="w-6 h-6 mr-2" />}
 			{children}
 		</ButtonBase>
 	)

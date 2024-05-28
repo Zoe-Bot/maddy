@@ -1,6 +1,10 @@
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
+import { jwtVerify } from 'jose'
+import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
-import { prisma } from '../../../services/client'
+import { prisma } from '../../../../services/client'
+
+const JWT_SECRET = process.env.JWT_SECRET as string
 
 export async function POST(request: Request): Promise<NextResponse> {
 	const body = (await request.json()) as HandleUploadBody
@@ -9,15 +13,23 @@ export async function POST(request: Request): Promise<NextResponse> {
 		const jsonResponse = await handleUpload({
 			body,
 			request,
-			onBeforeGenerateToken: async (pathname, clientPayload) => {
+			onBeforeGenerateToken: async (_, clientPayload) => {
 				if (clientPayload === null) {
 					throw Error('Client payload is required')
 				}
 
 				const clientPayloadData = JSON.parse(clientPayload)
 
-				if (clientPayloadData.password !== '1234') {
-					throw Error('Invalid password')
+				const cookieStore = cookies()
+				const authCookie = cookieStore.get('auth')
+
+				if (!authCookie) {
+					throw Error('Need to be logged in')
+				}
+				const payload = await jwtVerify(authCookie.value, new TextEncoder().encode(JWT_SECRET))
+
+				if (!payload) {
+					throw Error('Unauthorized')
 				}
 
 				return {

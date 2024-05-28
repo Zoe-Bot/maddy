@@ -5,6 +5,7 @@ import { Slideset } from '@prisma/client'
 import Link from 'next/link'
 import { useState } from 'react'
 import { routes } from '../../services/routes'
+import { AddEditSlideModal } from '../modal/AddEditSlideModal'
 import { DeleteModal } from '../modal/DeleteModal'
 
 type Props = {
@@ -13,6 +14,7 @@ type Props = {
 
 export const SlideSetListMenu: React.FC<Props> = ({ slideSet }) => {
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+	const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 	const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null)
 	const isOpen = Boolean(anchorElement)
 
@@ -31,6 +33,7 @@ export const SlideSetListMenu: React.FC<Props> = ({ slideSet }) => {
 			</IconButton>
 
 			{isDeleteModalOpen && <DeleteModal slideSet={slideSet} isModalOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} />}
+			{isEditModalOpen && <AddEditSlideModal isModalOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} slideset={slideSet} />}
 
 			<Menu
 				anchorEl={anchorElement}
@@ -55,7 +58,7 @@ export const SlideSetListMenu: React.FC<Props> = ({ slideSet }) => {
 				<MenuItem className="hover:bg-gray-200 px-6" onClick={handleClose}>
 					PDF exportieren (Probleme)
 				</MenuItem>
-				<MenuItem className="hover:bg-gray-200 px-6" onClick={handleClose}>
+				<MenuItem className="hover:bg-gray-200 px-6" onClick={() => setIsEditModalOpen(true)}>
 					Bearbeiten
 				</MenuItem>
 				<Divider className="mx-4" />

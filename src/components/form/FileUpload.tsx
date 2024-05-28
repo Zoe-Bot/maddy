@@ -1,21 +1,20 @@
 import { DocumentIcon } from '@heroicons/react/20/solid'
+import { Slideset } from '@prisma/client'
 import { Field, FieldProps } from 'formik'
 import { useRef, useState } from 'react'
 import { Button } from '../button/Button'
 import { FormError } from '../errors/FormError'
 
 type Props = {
-	/** The name of the field. */
 	name: string
-	/** The file that was uploaded. */
 	file: File | null
+	slideset?: Slideset
+	setHasFileEdited: any
 }
 
-/**
- * A drag and drop file upload component.
- */
-export const FileUpload: React.FC<Props> = ({ name, file }) => {
+export const FileUpload: React.FC<Props> = ({ name, file, slideset, setHasFileEdited }) => {
 	const [uploadedFile, setUploadedFile] = useState<File | null>(file)
+	const [editFile, setEditFile] = useState<Slideset | null>(slideset ?? null)
 	const [dragActive, setDragActive] = useState(false)
 
 	// Refs
@@ -48,6 +47,7 @@ export const FileUpload: React.FC<Props> = ({ name, file }) => {
 		const reader = new FileReader()
 		reader.readAsDataURL(file)
 		reader.onloadend = () => {
+			setHasFileEdited(true)
 			setUploadedFile(file)
 			formikProps.form.setFieldValue(formikProps.field.name, file)
 		}
@@ -105,7 +105,9 @@ export const FileUpload: React.FC<Props> = ({ name, file }) => {
 	 * @param formikProps helper
 	 */
 	const resetFile = (formikProps: FieldProps<any>) => {
+		setHasFileEdited(null)
 		setUploadedFile(null)
+		setEditFile(null)
 		formikProps.form.setFieldValue(formikProps.field.name, null)
 	}
 
@@ -120,7 +122,7 @@ export const FileUpload: React.FC<Props> = ({ name, file }) => {
 						onDragEnter={handleDrag}
 					>
 						{/* Upload Drag and Dropbox */}
-						{!uploadedFile && (
+						{!uploadedFile && !editFile && (
 							<>
 								{/* File upload */}
 								<input className="hidden" id="input-file-upload" ref={inputRef} type="file" accept=".pdf" onChange={(event) => handleChange(event, props)} />
@@ -146,10 +148,10 @@ export const FileUpload: React.FC<Props> = ({ name, file }) => {
 						)}
 
 						{/* File set */}
-						{uploadedFile && (
+						{(uploadedFile || editFile) && (
 							<div className="flex flex-col items-center justify-center h-full">
 								<DocumentIcon className="text-primary-600 h-10 w-10 mb-2" />
-								<p className="text-gray-700 font-medium">{uploadedFile.name}</p>
+								<p className="text-gray-700 font-medium">{editFile ? editFile.name : uploadedFile?.name}</p>
 								<Button kind="tertiary" onClick={() => resetFile(props)}>
 									Entfernen
 								</Button>
