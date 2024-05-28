@@ -3,7 +3,6 @@ import { IconButton, Modal, TextField, TextareaAutosize } from '@mui/material'
 import { Slideset } from '@prisma/client'
 import { upload } from '@vercel/blob/client'
 import { Field, FieldProps, Form, Formik } from 'formik'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import * as yup from 'yup'
 import { deletePdfFile, updateSlideset } from '../../services/slideSet'
@@ -25,7 +24,6 @@ export type SlideSetDto = {
 }
 
 export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slideset }) => {
-	const router = useRouter()
 	const isEditMode = Boolean(slideset)
 	const [hasPdfFileEdited, setHasPdfFileEdited] = useState<boolean>(false)
 	const initialValues: SlideSetDto = {
@@ -36,7 +34,7 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slide
 
 	const validationSchema = yup.object().shape({
 		name: yup.string().min(3, 'Name muss mindestens 3 Zeichen haben.').max(70, 'Name darf maximal 70 Zeichen haben.').required('Name ist erforderlich.'),
-		...(isEditMode && hasPdfFileEdited && { pdf: yup.mixed().required('Pdf Datei ist erforderlich.') }),
+		...(isEditMode && hasPdfFileEdited && { pdf: yup.mixed().required('PDF Datei ist erforderlich.') }),
 		description: yup.string().max(500, 'Beschreibung darf maximal 500 Zeichen haben.'),
 	})
 
@@ -81,7 +79,6 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slide
 							})
 						}
 
-						router.refresh()
 						onClose()
 					}}
 					validationSchema={validationSchema}

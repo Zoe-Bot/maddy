@@ -35,6 +35,8 @@ export async function updateSlideset(updatedSlideset: SlidesetUpdateDto) {
 			description: updatedSlideset.description,
 		},
 	})
+
+	revalidatePath(routes.admin.slideDecks.overview)
 }
 
 export async function deleteSlideSet(slideSet: Slideset) {
