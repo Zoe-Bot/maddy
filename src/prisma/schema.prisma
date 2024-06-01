@@ -22,9 +22,11 @@ model Feedback {
     slideset     Slideset     @relation(fields: [slidesetId], references: [id])
     slidesetId   Int
     page         Int
-    userId       Int
+    userId       String
     feedbackType FeedbackType
     timestamp    DateTime     @default(now())
+
+    @@unique([userId, slidesetId, page, feedbackType])
 }
 
 enum FeedbackType {
