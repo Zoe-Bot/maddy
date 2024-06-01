@@ -28,6 +28,6 @@ model Feedback {
 }
 
 enum FeedbackType {
-    QUESTION
-    NEGATIVE
+    question
+    nothing_understood
 }
