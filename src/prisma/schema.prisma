@@ -14,7 +14,7 @@ model Slideset {
     description String?
     pdfUrl      String
     uploadDate  DateTime   @default(now())
-    Feedback    Feedback[]
+    feedback    Feedback[]
 }
 
 model Feedback {
@@ -22,12 +22,14 @@ model Feedback {
     slideset     Slideset     @relation(fields: [slidesetId], references: [id])
     slidesetId   Int
     page         Int
-    userId       Int
+    userId       String
     feedbackType FeedbackType
     timestamp    DateTime     @default(now())
+
+    @@unique([userId, slidesetId, page, feedbackType])
 }
 
 enum FeedbackType {
-    QUESTION
-    NEGATIVE
+    question
+    nothing_understood
 }

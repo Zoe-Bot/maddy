@@ -11,9 +11,38 @@ type SlidesetUpdateDto = {
 	description?: string
 }
 
-export async function getSlideSets() {
-	const slideSets = await prisma.slideset.findMany()
-	return slideSets
+export async function getSlideSetsWithCounts() {
+	const slidesets = await prisma.slideset.findMany({
+		include: {
+			_count: {
+				select: {
+					feedback: {
+						where: {
+							feedbackType: 'question',
+						},
+					},
+				},
+			},
+			feedback: {
+				where: {
+					feedbackType: 'nothing_understood',
+				},
+				select: {
+					feedbackType: true,
+				},
+			},
+		},
+	})
+
+	const slidesetsWithFeedbackCounts = slidesets.map((slideset) => ({
+		...slideset,
+		feedbackCounts: {
+			questions: slideset._count.feedback,
+			nothing_understood: slideset.feedback.length,
+		},
+	}))
+
+	return slidesetsWithFeedbackCounts
 }
 
 export async function getSlideSet(id: number) {
