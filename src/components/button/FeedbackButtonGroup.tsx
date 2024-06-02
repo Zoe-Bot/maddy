@@ -2,8 +2,8 @@
 import { HandRaisedIcon } from '@heroicons/react/20/solid'
 import { FeedbackType } from '@prisma/client'
 import { useSearchParams } from 'next/navigation'
-import { useState } from 'react'
-import { createFeedback, deleteFeedback } from '../../services/feedback'
+import { useEffect, useMemo, useState } from 'react'
+import { createFeedback, deleteFeedback, getFeedbackFromUser, getNothingUnderstoodFeedbacksPerSlidesetAndPage, getQuestionFeedbacksPerSlidesetAndPage } from '../../services/feedback'
 import { getUserId } from '../../services/user'
 import { Button } from './Button'
 
@@ -14,12 +14,38 @@ type Props = {
 export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 	const searchParams = useSearchParams()
 	const page = searchParams.get('page')
+	const pageNumber = useMemo(() => (page ? parseInt(page) : 1), [page])
+	const userId = getUserId()
 
 	const [activeButton, setActiveButton] = useState<'question' | 'nothing_understood' | null>()
+	const [totalQuestions, setTotalQuestions] = useState<number>(0)
+	const [totalNothingUnderstood, setTotalNothingUnderstood] = useState<number>(0)
+
+	useEffect(() => {
+		const getFeedback = async () => {
+			const feedbacks = await getFeedbackFromUser(slidesetId, pageNumber, userId)
+
+			if (feedbacks.length !== 0) {
+				setActiveButton(feedbacks[0].feedbackType)
+			} else {
+				setActiveButton(null)
+			}
+		}
+		getFeedback()
+	}, [slidesetId, pageNumber, userId])
+
+	useEffect(() => {
+		const getQuestionsAndNothingUnderstood = async () => {
+			const totalQuestions = await getQuestionFeedbacksPerSlidesetAndPage(slidesetId, pageNumber)
+			const totalNothingUnderstood = await getNothingUnderstoodFeedbacksPerSlidesetAndPage(slidesetId, pageNumber)
+
+			setTotalQuestions(totalQuestions)
+			setTotalNothingUnderstood(totalNothingUnderstood)
+		}
+		getQuestionsAndNothingUnderstood()
+	}, [slidesetId, pageNumber, activeButton])
 
 	const handleFeedback = async (feedbackType: FeedbackType) => {
-		const userId = getUserId()
-		const pageNumber = page ? parseInt(page) : 1
 		const feedback = {
 			userId,
 			slidesetId,
@@ -51,7 +77,7 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 				<div className="flex justify-between">
 					<HandRaisedIcon className={`${activeButton === 'question' ? '' : 'opacity-0'} w-6 h-6 mr-2`} />
 					<p className="w-56 mr-8">Ich habe eine Frage</p>
-					<p>10</p>
+					<p>{totalQuestions}</p>
 				</div>
 			</Button>
 
@@ -59,7 +85,7 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 				<div className="flex justify-between">
 					<HandRaisedIcon className={`${activeButton === 'nothing_understood' ? '' : 'opacity-0'} w-6 h-6 mr-2`} />
 					<p className="w-56 mr-8">Ganze Folie erklären</p>
-					<p>20</p>
+					<p>{totalNothingUnderstood}</p>
 				</div>
 			</Button>
 		</div>
