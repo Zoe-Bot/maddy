@@ -1,6 +1,5 @@
-import { HandRaisedIcon } from '@heroicons/react/20/solid'
 import { notFound } from 'next/navigation'
-import { Button } from '../../components/button/Button'
+import { FeedbackButtonGroup } from '../../components/button/FeedbackButtonGroup'
 import SinglePagePdfRender from '../../components/layout/SinglePagePdfRender'
 import { getSlideSet } from '../../services/slideSet'
 
@@ -22,23 +21,7 @@ export default async function SingleSlide({ params }: Params) {
 			<div className="flex flex-col">
 				<h2 className="font-bold mb-2">Dozent benachrichtigen</h2>
 
-				<div className="flex flex-col space-y-2">
-					<Button>
-						<div className="flex justify-between">
-							<HandRaisedIcon className="w-6 h-6 mr-2" />
-							<p className="w-56">Ich habe eine Frage</p>
-							<p>10</p>
-						</div>
-					</Button>
-
-					<Button kind="secondary">
-						<div className="flex justify-between">
-							<HandRaisedIcon className="w-6 h-6 mr-2" />
-							<p className="w-56">Ganze Folie erklären</p>
-							<p>20</p>
-						</div>
-					</Button>
-				</div>
+				<FeedbackButtonGroup slidesetId={slideSet.id} />
 			</div>
 		</SinglePagePdfRender>
 	)
