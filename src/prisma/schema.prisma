@@ -14,7 +14,7 @@ model Slideset {
     description String?
     pdfUrl      String
     uploadDate  DateTime   @default(now())
-    Feedback    Feedback[]
+    feedback    Feedback[]
 }
 
 model Feedback {
