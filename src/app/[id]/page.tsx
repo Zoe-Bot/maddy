@@ -1,12 +1,14 @@
 import { notFound } from 'next/navigation'
 import { FeedbackButtonGroup } from '../../components/button/FeedbackButtonGroup'
+import { FeedbackStars } from '../../components/button/FeedbackStars'
 import SinglePagePdfRender from '../../components/layout/SinglePagePdfRender'
 import { getSlideSet } from '../../services/slideSet'
 
-type Params = { params: { id: string } }
+type Params = { params: { id: string }; searchParams: { page: string } }
 
-export default async function SingleSlide({ params }: Params) {
+export default async function SingleSlide({ params, searchParams }: Params) {
 	const { id } = params
+	const { page } = searchParams
 	const slideSet = await getSlideSet(parseInt(id))
 
 	if (!slideSet) {
@@ -21,7 +23,7 @@ export default async function SingleSlide({ params }: Params) {
 			<div className="flex flex-col">
 				<h2 className="font-bold mb-2">Dozent benachrichtigen</h2>
 
-				<FeedbackButtonGroup slidesetId={slideSet.id} />
+				{parseInt(page) % 2 === 0 ? <FeedbackButtonGroup slidesetId={slideSet.id} /> : <FeedbackStars slidesetId={slideSet.id} />}
 			</div>
 		</SinglePagePdfRender>
 	)
