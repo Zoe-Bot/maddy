@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { getTotalNothingUnderstoodFeedbacks, getTotalQuestionFeedbacks } from '../../services/feedback'
 import { routes } from '../../services/routes'
 import { getSlideSetsWithCounts } from '../../services/slideSet'
-import { Chip } from '../ui/Chip'
 import { SlideSetListMenu } from '../ui/SlideSetListMenu'
 
 type Props = {
@@ -28,8 +27,8 @@ export const SlideSetList: React.FC<Props> = async ({ isAdmin }) => {
 							</div>
 
 							<div className="flex items-center gap-2 min-w-fit">
-								<Chip color="primary">{slideSet.feedbackCounts.questions} ?</Chip>
-								<Chip color="red">{slideSet.feedbackCounts.nothing_understood} x</Chip>
+								{/* <Chip color="primary">{slideSet.feedbackCounts.questions} ?</Chip>
+								<Chip color="red">{slideSet.feedbackCounts.nothing_understood} x</Chip> */}
 
 								{!isAdmin && <ChevronRightIcon className="w-8 h-8 text-gray-400 ml-5" />}
 							</div>
@@ -40,12 +39,12 @@ export const SlideSetList: React.FC<Props> = async ({ isAdmin }) => {
 				))}
 			</div>
 
-			<div className="text-center">
+			{/* <div className="text-center">
 				<p>
 					Das sind <span className="font-bold">{slideSets.length} Folien</span> mit ingesamt <Chip color="primary">{totalQuestions} ?</Chip> {totalQuestions === 1 ? 'Frage' : 'Fragen'} und{' '}
 					<Chip color="red">{totalNothingUnderstood} x</Chip> nicht verstanden.
 				</p>
-			</div>
+			</div> */}
 		</>
 	)
 }

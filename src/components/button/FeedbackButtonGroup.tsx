@@ -1,9 +1,9 @@
 'use client'
-import { ArrowPathIcon, HandRaisedIcon } from '@heroicons/react/20/solid'
+import { HandRaisedIcon } from '@heroicons/react/20/solid'
 import { FeedbackType } from '@prisma/client'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { createFeedback, deleteFeedback, getFeedbackFromUser, getNothingUnderstoodFeedbacksPerSlidesetAndPage, getQuestionFeedbacksPerSlidesetAndPage } from '../../services/feedback'
+import { createFeedback, deleteFeedback, getFeedbackFromUser } from '../../services/feedback'
 import { getUserId } from '../../services/user'
 import { Button } from './Button'
 
@@ -18,9 +18,9 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 	const userId = getUserId()
 
 	const [activeButton, setActiveButton] = useState<'question' | 'nothing_understood' | null>()
-	const [totalQuestions, setTotalQuestions] = useState<number>(0)
-	const [totalNothingUnderstood, setTotalNothingUnderstood] = useState<number>(0)
-	const [isLoadingTotalFeedback, setIsLoadingTotalFeedback] = useState<boolean>(true)
+	// const [totalQuestions, setTotalQuestions] = useState<number>(0)
+	// const [totalNothingUnderstood, setTotalNothingUnderstood] = useState<number>(0)
+	// const [isLoadingTotalFeedback, setIsLoadingTotalFeedback] = useState<boolean>(true)
 
 	useEffect(() => {
 		const getFeedback = async () => {
@@ -35,18 +35,18 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 		getFeedback()
 	}, [slidesetId, pageNumber, userId])
 
-	useEffect(() => {
-		setIsLoadingTotalFeedback(true)
-		const getQuestionsAndNothingUnderstood = async () => {
-			const totalQuestions = await getQuestionFeedbacksPerSlidesetAndPage({ slidesetId, page: pageNumber })
-			const totalNothingUnderstood = await getNothingUnderstoodFeedbacksPerSlidesetAndPage({ slidesetId, page: pageNumber })
+	// useEffect(() => {
+	// 	setIsLoadingTotalFeedback(true)
+	// 	const getQuestionsAndNothingUnderstood = async () => {
+	// 		const totalQuestions = await getQuestionFeedbacksPerSlidesetAndPage({ slidesetId, page: pageNumber })
+	// 		const totalNothingUnderstood = await getNothingUnderstoodFeedbacksPerSlidesetAndPage({ slidesetId, page: pageNumber })
 
-			setTotalQuestions(totalQuestions)
-			setTotalNothingUnderstood(totalNothingUnderstood)
-			setIsLoadingTotalFeedback(false)
-		}
-		getQuestionsAndNothingUnderstood()
-	}, [slidesetId, pageNumber, activeButton])
+	// 		setTotalQuestions(totalQuestions)
+	// 		setTotalNothingUnderstood(totalNothingUnderstood)
+	// 		setIsLoadingTotalFeedback(false)
+	// 	}
+	// 	getQuestionsAndNothingUnderstood()
+	// }, [slidesetId, pageNumber, activeButton])
 
 	const handleFeedback = async (feedbackType: FeedbackType) => {
 		const feedback = {
@@ -80,7 +80,7 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 				<div className="flex justify-between items-center">
 					<HandRaisedIcon className={`${activeButton === 'question' ? '' : 'opacity-0'} w-6 h-6 mr-2`} />
 					<p className="w-56 mr-6">Ich habe eine kleine Frage</p>
-					<p className="w-6">{isLoadingTotalFeedback ? <ArrowPathIcon className="animate-spin w-5 h-5" /> : totalQuestions}</p>
+					{/* <p className="w-6">{isLoadingTotalFeedback ? <ArrowPathIcon className="animate-spin w-5 h-5" /> : totalQuestions}</p> */}
 				</div>
 			</Button>
 
@@ -88,7 +88,7 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 				<div className="flex justify-between items-center">
 					<HandRaisedIcon className={`${activeButton === 'nothing_understood' ? '' : 'opacity-0'} w-6 h-6 mr-2`} />
 					<p className="w-56 mr-6">Ganze Folie erklären</p>
-					<p className="w-6">{isLoadingTotalFeedback ? <ArrowPathIcon className="animate-spin w-5 h-5" /> : totalNothingUnderstood}</p>
+					{/* <p className="w-6">{isLoadingTotalFeedback ? <ArrowPathIcon className="animate-spin w-5 h-5" /> : totalNothingUnderstood}</p> */}
 				</div>
 			</Button>
 		</div>
