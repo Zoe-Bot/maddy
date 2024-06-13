@@ -76,7 +76,7 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 			<Button onClick={() => handleFeedback('question')} kind={activeButton === 'question' ? 'primary' : 'secondary'}>
 				<div className="flex justify-between">
 					<HandRaisedIcon className={`${activeButton === 'question' ? '' : 'opacity-0'} w-6 h-6 mr-2`} />
-					<p className="w-56 mr-8">Ich habe eine Frage</p>
+					<p className="w-56 mr-8">Ich habe eine kleine Frage</p>
 					<p>{totalQuestions}</p>
 				</div>
 			</Button>
