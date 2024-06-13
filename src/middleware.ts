@@ -1,4 +1,5 @@
 import { jwtVerify } from 'jose'
+import { JWSSignatureVerificationFailed } from 'jose/errors'
 import { NextRequest, NextResponse } from 'next/server'
 import { routes } from './services/routes'
 
@@ -26,8 +27,16 @@ export async function middleware(request: NextRequest) {
 			if (payload) {
 				isAuthenticated = true
 			}
-		} catch (err) {
-			console.error('err', err)
+		} catch (error) {
+			if ((error as JWSSignatureVerificationFailed).code === 'ERR_JWT_EXPIRED') {
+				const response = NextResponse.redirect(new URL(routes.login, request.url))
+				console.debug('JWT expired')
+				response.cookies.delete('auth')
+				console.debug('Cookie deleted')
+				return response
+			} else {
+				console.error('JWT verification failed', error)
+			}
 		}
 	}
 
