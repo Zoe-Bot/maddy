@@ -24,7 +24,7 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 
 	useEffect(() => {
 		const getFeedback = async () => {
-			const feedbacks = await getFeedbackFromUser(slidesetId, pageNumber, userId)
+			const feedbacks = await getFeedbackFromUser({ slidesetId, page: pageNumber, userId })
 
 			if (feedbacks.length !== 0) {
 				setActiveButton(feedbacks[0].feedbackType)
@@ -38,8 +38,8 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 	useEffect(() => {
 		setIsLoadingTotalFeedback(true)
 		const getQuestionsAndNothingUnderstood = async () => {
-			const totalQuestions = await getQuestionFeedbacksPerSlidesetAndPage(slidesetId, pageNumber)
-			const totalNothingUnderstood = await getNothingUnderstoodFeedbacksPerSlidesetAndPage(slidesetId, pageNumber)
+			const totalQuestions = await getQuestionFeedbacksPerSlidesetAndPage({ slidesetId, page: pageNumber })
+			const totalNothingUnderstood = await getNothingUnderstoodFeedbacksPerSlidesetAndPage({ slidesetId, page: pageNumber })
 
 			setTotalQuestions(totalQuestions)
 			setTotalNothingUnderstood(totalNothingUnderstood)

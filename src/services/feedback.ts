@@ -8,96 +8,127 @@ type FeedbackDto = {
 	slidesetId: number
 	page: number
 	userId: string
-	feedbackType: FeedbackType
 }
 
-export async function getFeedbackFromUser(slidesetId: number, page: number, userId: string): Promise<Feedback[]> {
-	const feedbacks = await prisma.feedback.findMany({
-		where: {
-			slidesetId,
-			page,
-			userId,
-		},
-	})
+export async function getFeedbackFromUser({ slidesetId, page, userId }: FeedbackDto): Promise<Feedback[]> {
+	try {
+		const feedbacks = await prisma.feedback.findMany({
+			where: {
+				slidesetId,
+				page,
+				userId,
+			},
+		})
 
-	return feedbacks
+		return feedbacks
+	} catch (error) {
+		console.error('Error fetching feedbacks', error)
+		return []
+	}
 }
 
-export async function createFeedback(feedback: FeedbackDto) {
-	await prisma.feedback.upsert({
-		where: {
-			userId_slidesetId_page_feedbackType: {
+export async function createFeedback(feedback: FeedbackDto & { feedbackType: FeedbackType }) {
+	try {
+		await prisma.feedback.upsert({
+			where: {
+				userId_slidesetId_page_feedbackType: {
+					userId: feedback.userId,
+					slidesetId: feedback.slidesetId,
+					page: feedback.page,
+					feedbackType: feedback.feedbackType,
+				},
+			},
+			create: {
+				slidesetId: feedback.slidesetId,
+				page: feedback.page,
+				userId: feedback.userId,
+				feedbackType: feedback.feedbackType,
+			},
+			update: {},
+		})
+		revalidatePath(routes.slideDecks.overview)
+	} catch (error) {
+		console.error('Error creating feedback', error)
+	}
+}
+
+export async function deleteFeedback(feedback: FeedbackDto & { feedbackType: FeedbackType }) {
+	try {
+		await prisma.feedback.deleteMany({
+			where: {
 				userId: feedback.userId,
 				slidesetId: feedback.slidesetId,
 				page: feedback.page,
 				feedbackType: feedback.feedbackType,
 			},
-		},
-		create: {
-			slidesetId: feedback.slidesetId,
-			page: feedback.page,
-			userId: feedback.userId,
-			feedbackType: feedback.feedbackType,
-		},
-		update: {},
-	})
+		})
 
-	revalidatePath(routes.slideDecks.overview)
-}
-
-export async function deleteFeedback(feedback: FeedbackDto) {
-	await prisma.feedback.deleteMany({
-		where: {
-			userId: feedback.userId,
-			slidesetId: feedback.slidesetId,
-			page: feedback.page,
-			feedbackType: feedback.feedbackType,
-		},
-	})
-
-	revalidatePath(routes.slideDecks.overview)
+		revalidatePath(routes.slideDecks.overview)
+	} catch (error) {
+		console.error('Error deleting feedback', error)
+	}
 }
 
 export async function getTotalQuestionFeedbacks(): Promise<number> {
-	const totalQuestions = await prisma.feedback.count({
-		where: {
-			feedbackType: 'question',
-		},
-	})
+	try {
+		const totalQuestions = await prisma.feedback.count({
+			where: {
+				feedbackType: 'question',
+			},
+		})
 
-	return totalQuestions
+		return totalQuestions
+	} catch (error) {
+		console.error('Error fetching total question feedbacks', error)
+		return 0
+	}
 }
 
 export async function getTotalNothingUnderstoodFeedbacks(): Promise<number> {
-	const totalNothingUnderstood = await prisma.feedback.count({
-		where: {
-			feedbackType: 'nothing_understood',
-		},
-	})
+	try {
+		const totalNothingUnderstood = await prisma.feedback.count({
+			where: {
+				feedbackType: 'nothing_understood',
+			},
+		})
 
-	return totalNothingUnderstood
+		return totalNothingUnderstood
+	} catch (error) {
+		console.error('Error fetching total nothing understood feedbacks', error)
+		return 0
+	}
 }
 
-export async function getQuestionFeedbacksPerSlidesetAndPage(slidesetId: number, page: number): Promise<number> {
-	const questionFeedbacks = await prisma.feedback.count({
-		where: {
-			slidesetId,
-			page,
-			feedbackType: 'question',
-		},
-	})
+export async function getQuestionFeedbacksPerSlidesetAndPage({ slidesetId, page }: { slidesetId: number; page: number }): Promise<number> {
+	try {
+		const questionFeedbacks = await prisma.feedback.count({
+			where: {
+				slidesetId,
+				page,
+				feedbackType: 'question',
+			},
+		})
 
-	return questionFeedbacks
+		return questionFeedbacks
+	} catch (error) {
+		console.error('Error fetching question feedbacks', error)
+		return 0
+	}
 }
 
-export async function getNothingUnderstoodFeedbacksPerSlidesetAndPage(slidesetId: number, page: number): Promise<number> {
-	const nothingUnderstoodFeedbacks = await prisma.feedback.count({
-		where: {
-			slidesetId,
-			page,
-			feedbackType: 'nothing_understood',
-		},
-	})
+export async function getNothingUnderstoodFeedbacksPerSlidesetAndPage({ slidesetId, page }: { slidesetId: number; page: number }): Promise<number> {
+	try {
+		const nothingUnderstoodFeedbacks = await prisma.feedback.count({
+			where: {
+				slidesetId,
+				page,
+				feedbackType: 'nothing_understood',
+			},
+		})
 
-	return nothingUnderstoodFeedbacks
+		return nothingUnderstoodFeedbacks
+	} catch (error) {
+		console.error('Error fetching nothing understood feedbacks', error)
+		return 0
+	}
 }
