@@ -1,6 +1,6 @@
 'use server'
 import { Rating } from '@prisma/client'
-import { prisma } from './client'
+import prisma from './client'
 
 type RatingDto = {
 	slidesetId: number
