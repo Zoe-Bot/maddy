@@ -2,7 +2,7 @@
 import { Slideset } from '@prisma/client'
 import { del } from '@vercel/blob'
 import { revalidatePath } from 'next/cache'
-import { prisma } from './client'
+import prisma from './client'
 import { routes } from './routes'
 
 type SlidesetUpdateDto = {

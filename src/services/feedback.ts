@@ -1,8 +1,7 @@
 'use server'
-
 import { Feedback, FeedbackType } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
-import { prisma } from './client'
+import prisma from './client'
 import { routes } from './routes'
 
 type FeedbackDto = {
