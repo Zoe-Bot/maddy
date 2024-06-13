@@ -39,8 +39,8 @@ export async function getIsAuthenticated(): Promise<boolean> {
 		try {
 			await jwtVerify(cookie.value, new TextEncoder().encode(JWT_SECRET))
 			return true
-		} catch (err) {
-			console.error('err', err)
+		} catch (error) {
+			console.error('error', error)
 		}
 	}
 
