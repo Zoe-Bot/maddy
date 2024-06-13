@@ -15,6 +15,7 @@ model Slideset {
     pdfUrl      String
     uploadDate  DateTime   @default(now())
     feedback    Feedback[]
+    rating      Rating[]
 }
 
 model Feedback {
@@ -27,6 +28,18 @@ model Feedback {
     timestamp    DateTime     @default(now())
 
     @@unique([userId, slidesetId, page, feedbackType])
+}
+
+model Rating {
+    id         Int      @id @default(autoincrement())
+    slideset   Slideset @relation(fields: [slidesetId], references: [id])
+    slidesetId Int
+    page       Int
+    userId     String
+    stars      Int
+    timestamp  DateTime @default(now())
+
+    @@unique([userId, slidesetId, page])
 }
 
 enum FeedbackType {
