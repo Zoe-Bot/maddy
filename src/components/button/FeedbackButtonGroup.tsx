@@ -1,5 +1,5 @@
 'use client'
-import { HandRaisedIcon } from '@heroicons/react/20/solid'
+import { ArrowPathIcon, HandRaisedIcon } from '@heroicons/react/20/solid'
 import { FeedbackType } from '@prisma/client'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
@@ -20,6 +20,7 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 	const [activeButton, setActiveButton] = useState<'question' | 'nothing_understood' | null>()
 	const [totalQuestions, setTotalQuestions] = useState<number>(0)
 	const [totalNothingUnderstood, setTotalNothingUnderstood] = useState<number>(0)
+	const [isLoadingTotalFeedback, setIsLoadingTotalFeedback] = useState<boolean>(true)
 
 	useEffect(() => {
 		const getFeedback = async () => {
@@ -35,12 +36,14 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 	}, [slidesetId, pageNumber, userId])
 
 	useEffect(() => {
+		setIsLoadingTotalFeedback(true)
 		const getQuestionsAndNothingUnderstood = async () => {
 			const totalQuestions = await getQuestionFeedbacksPerSlidesetAndPage(slidesetId, pageNumber)
 			const totalNothingUnderstood = await getNothingUnderstoodFeedbacksPerSlidesetAndPage(slidesetId, pageNumber)
 
 			setTotalQuestions(totalQuestions)
 			setTotalNothingUnderstood(totalNothingUnderstood)
+			setIsLoadingTotalFeedback(false)
 		}
 		getQuestionsAndNothingUnderstood()
 	}, [slidesetId, pageNumber, activeButton])
@@ -74,18 +77,18 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 	return (
 		<div className="flex flex-col space-y-2">
 			<Button onClick={() => handleFeedback('question')} kind={activeButton === 'question' ? 'primary' : 'secondary'}>
-				<div className="flex justify-between">
+				<div className="flex justify-between items-center">
 					<HandRaisedIcon className={`${activeButton === 'question' ? '' : 'opacity-0'} w-6 h-6 mr-2`} />
-					<p className="w-56 mr-8">Ich habe eine kleine Frage</p>
-					<p>{totalQuestions}</p>
+					<p className="w-56 mr-6">Ich habe eine kleine Frage</p>
+					<p className="w-6">{isLoadingTotalFeedback ? <ArrowPathIcon className="animate-spin w-5 h-5" /> : totalQuestions}</p>
 				</div>
 			</Button>
 
 			<Button onClick={() => handleFeedback('nothing_understood')} kind={activeButton === 'nothing_understood' ? 'primary' : 'secondary'}>
-				<div className="flex justify-between">
+				<div className="flex justify-between items-center">
 					<HandRaisedIcon className={`${activeButton === 'nothing_understood' ? '' : 'opacity-0'} w-6 h-6 mr-2`} />
-					<p className="w-56 mr-8">Ganze Folie erklären</p>
-					<p>{totalNothingUnderstood}</p>
+					<p className="w-56 mr-6">Ganze Folie erklären</p>
+					<p className="w-6">{isLoadingTotalFeedback ? <ArrowPathIcon className="animate-spin w-5 h-5" /> : totalNothingUnderstood}</p>
 				</div>
 			</Button>
 		</div>
