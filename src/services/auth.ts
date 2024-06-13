@@ -18,7 +18,7 @@ export async function login(password: string): Promise<string | void> {
 }
 
 export async function setLoginCookie(password: string): Promise<void> {
-	const token = await new SignJWT({ password }).setProtectedHeader({ alg: 'HS256' }).setIssuedAt().setExpirationTime('1h').sign(new TextEncoder().encode(JWT_SECRET))
+	const token = await new SignJWT({ password }).setProtectedHeader({ alg: 'HS256' }).setIssuedAt().setExpirationTime('1d').sign(new TextEncoder().encode(JWT_SECRET))
 
 	cookies().set('auth', token, {
 		sameSite: 'strict',
@@ -39,8 +39,8 @@ export async function getIsAuthenticated(): Promise<boolean> {
 		try {
 			await jwtVerify(cookie.value, new TextEncoder().encode(JWT_SECRET))
 			return true
-		} catch (err) {
-			console.error('err', err)
+		} catch (error) {
+			console.error('error', error)
 		}
 	}
 

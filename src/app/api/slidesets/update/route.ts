@@ -2,7 +2,7 @@ import { handleUpload, type HandleUploadBody } from '@vercel/blob/client'
 import { jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
-import { prisma } from '../../../../services/client'
+import prisma from '../../../../services/client'
 
 const JWT_SECRET = process.env.JWT_SECRET as string
 

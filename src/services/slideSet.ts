@@ -2,7 +2,7 @@
 import { Slideset } from '@prisma/client'
 import { del } from '@vercel/blob'
 import { revalidatePath } from 'next/cache'
-import { prisma } from './client'
+import prisma from './client'
 import { routes } from './routes'
 
 type SlidesetUpdateDto = {
@@ -12,75 +12,97 @@ type SlidesetUpdateDto = {
 }
 
 export async function getSlideSetsWithCounts() {
-	const slidesets = await prisma.slideset.findMany({
-		include: {
-			_count: {
-				select: {
-					feedback: {
-						where: {
-							feedbackType: 'question',
+	try {
+		const slidesets = await prisma.slideset.findMany({
+			include: {
+				_count: {
+					select: {
+						feedback: {
+							where: {
+								feedbackType: 'question',
+							},
 						},
 					},
 				},
-			},
-			feedback: {
-				where: {
-					feedbackType: 'nothing_understood',
+				feedback: {
+					where: {
+						feedbackType: 'nothing_understood',
+					},
+					select: {
+						feedbackType: true,
+					},
 				},
-				select: {
-					feedbackType: true,
-				},
 			},
-		},
-	})
+		})
 
-	const slidesetsWithFeedbackCounts = slidesets.map((slideset) => ({
-		...slideset,
-		feedbackCounts: {
-			questions: slideset._count.feedback,
-			nothing_understood: slideset.feedback.length,
-		},
-	}))
+		const slidesetsWithFeedbackCounts = slidesets.map((slideset) => ({
+			...slideset,
+			feedbackCounts: {
+				questions: slideset._count.feedback,
+				nothing_understood: slideset.feedback.length,
+			},
+		}))
 
-	return slidesetsWithFeedbackCounts
+		return slidesetsWithFeedbackCounts
+	} catch (error) {
+		console.error('Error fetching slidesets', error)
+		return []
+	}
 }
 
 export async function getSlideSet(id: number) {
-	const slideSet = await prisma.slideset.findUnique({
-		where: {
-			id: id,
-		},
-	})
-	return slideSet
+	try {
+		const slideSet = await prisma.slideset.findUnique({
+			where: {
+				id: id,
+			},
+		})
+		return slideSet
+	} catch (error) {
+		console.error('Error fetching slideset', error)
+		return null
+	}
 }
 
 export async function updateSlideset(updatedSlideset: SlidesetUpdateDto) {
-	await prisma.slideset.update({
-		where: {
-			id: updatedSlideset.id,
-		},
-		data: {
-			name: updatedSlideset.name,
-			description: updatedSlideset.description,
-		},
-	})
+	try {
+		await prisma.slideset.update({
+			where: {
+				id: updatedSlideset.id,
+			},
+			data: {
+				name: updatedSlideset.name,
+				description: updatedSlideset.description,
+			},
+		})
 
-	revalidatePath(routes.admin.slideDecks.overview)
+		revalidatePath(routes.admin.slideDecks.overview)
+	} catch (error) {
+		console.error('Error updating slideset', error)
+	}
 }
 
 export async function deleteSlideSet(slideSet: Slideset) {
-	await prisma.slideset.delete({
-		where: {
-			id: slideSet.id,
-		},
-	})
+	try {
+		await prisma.slideset.delete({
+			where: {
+				id: slideSet.id,
+			},
+		})
 
-	await del(slideSet.pdfUrl)
+		await del(slideSet.pdfUrl)
 
-	revalidatePath(routes.admin.slideDecks.overview)
+		revalidatePath(routes.admin.slideDecks.overview)
+	} catch (error) {
+		console.error('Error deleting slideset', error)
+	}
 }
 
 export async function deletePdfFile(pdfUrl: string) {
-	await del(pdfUrl)
-	revalidatePath(routes.admin.slideDecks.overview)
+	try {
+		await del(pdfUrl)
+		revalidatePath(routes.admin.slideDecks.overview)
+	} catch (error) {
+		console.error('Error deleting pdf file', error)
+	}
 }
