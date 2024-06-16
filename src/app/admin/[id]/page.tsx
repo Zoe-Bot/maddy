@@ -1,21 +1,22 @@
 import { XMarkIcon } from '@heroicons/react/20/solid'
 import { notFound } from 'next/navigation'
 import SinglePagePdfRender from '../../../components/layout/SinglePagePdfRender'
-import { getTotalNothingUnderstoodFeedbacks, getTotalQuestionFeedbacks } from '../../../services/feedback'
+import { getNothingUnderstoodFeedbacksPerSlidesetAndPage, getQuestionFeedbacksPerSlidesetAndPage } from '../../../services/feedback'
 import { getSlideSet } from '../../../services/slideSet'
 
-type Params = { params: { id: string } }
+type Params = { params: { id: string }; searchParams: { page: string } }
 
-export default async function SingleSlide({ params }: Params) {
+export default async function SingleSlide({ params, searchParams }: Params) {
 	const { id } = params
+	const { page } = searchParams
 	const slideSet = await getSlideSet(parseInt(id))
 
 	if (!slideSet) {
 		return notFound()
 	}
 
-	const totalQuestions = await getTotalQuestionFeedbacks()
-	const totalNothingUnderstood = await getTotalNothingUnderstoodFeedbacks()
+	const totalQuestions = await getQuestionFeedbacksPerSlidesetAndPage({ slidesetId: parseInt(id), page: parseInt(page) })
+	const totalNothingUnderstood = await getNothingUnderstoodFeedbacksPerSlidesetAndPage({ slidesetId: parseInt(id), page: parseInt(page) })
 
 	return (
 		<SinglePagePdfRender pdfUrl={slideSet.pdfUrl} isAdmin>
