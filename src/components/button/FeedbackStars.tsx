@@ -49,14 +49,14 @@ export const FeedbackStars: React.FC<Props> = ({ slidesetId }) => {
 		}
 
 		if (newValue === null) {
-			await deleteRating(feedback)
 			setValue(null)
+			await deleteRating(feedback)
 		} else if (value === null || newValue !== value) {
+			setValue(newValue)
 			await createOrUpdateRating({
 				...feedback,
 				stars: newValue,
 			})
-			setValue(newValue)
 		}
 	}
 
