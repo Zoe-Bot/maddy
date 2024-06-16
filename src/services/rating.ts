@@ -69,3 +69,42 @@ export const createOrUpdateRating = async ({ slidesetId, page, userId, stars }: 
 		throw error
 	}
 }
+
+type RatingCount = {
+	one: number
+	two: number
+	three: number
+	four: number
+	five: number
+}
+
+export const getRatingPerSlidesetAndPage = async ({ slidesetId, page }: { slidesetId: number; page: number }): Promise<RatingCount> => {
+	const starMap = {
+		1: 'one',
+		2: 'two',
+		3: 'three',
+		4: 'four',
+		5: 'five',
+	}
+
+	const ratingCounts = await prisma.rating.groupBy({
+		where: {
+			slidesetId,
+			page,
+		},
+		by: ['stars'],
+		_count: {
+			stars: true,
+		},
+	})
+
+	const ratingCountsObject = ratingCounts.reduce(
+		(acc: { [key: string]: number }, { stars, _count }) => {
+			const key = starMap[stars as keyof typeof starMap]
+			acc[key] = _count.stars
+			return acc
+		},
+		{ one: 0, two: 0, three: 0, four: 0, five: 0 },
+	) as RatingCount
+	return ratingCountsObject
+}
