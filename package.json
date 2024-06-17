@@ -24,6 +24,7 @@
 		"formik": "^2.4.6",
 		"jose": "^5.3.0",
 		"next": "14.2.3",
+		"nextjs-toploader": "^1.6.12",
 		"react": "^18",
 		"react-dom": "^18",
 		"react-pdf": "^8.0.2",
@@ -32,6 +33,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "^20",
+		"@types/nprogress": "^0.2.3",
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
 		"@types/uuid": "^9.0.8",

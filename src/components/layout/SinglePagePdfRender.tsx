@@ -1,6 +1,7 @@
 'use client'
 import { Pagination } from '@mui/material'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import NProgress from 'nprogress'
 import { useEffect, useRef, useState } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { routes } from '../../services/routes'
@@ -62,6 +63,8 @@ const SinglePagePdfRender: React.FC<Props> = ({ pdfUrl, children, isAdmin }) => 
 						count={totalPages}
 						page={Number(page)}
 						onChange={(_, number) => {
+							// Need to start this manually because the package does not support router.push
+							NProgress.start()
 							router.push(baseUrl(Number(id), number))
 						}}
 					/>
