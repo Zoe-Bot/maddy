@@ -1,9 +1,11 @@
 'use client'
 import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material'
 import { Inter } from 'next/font/google'
-import React from 'react'
+import NextTopLoader from 'nextjs-toploader'
+import React, { Suspense } from 'react'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
+import { NavigationEvents } from '../NavigationEvents'
 import { Footer } from './Footer'
 import { Navbar } from './Navbar'
 
@@ -33,6 +35,12 @@ export const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
 			<ThemeProvider theme={theme}>
 				<html lang="en">
 					<body className={`${inter.className} flex flex-col min-h-screen h-screen`}>
+						<NextTopLoader color="#245c66" initialPosition={0.08} height={8} showSpinner={true} crawl={true} crawlSpeed={200} easing="ease" speed={200} />
+
+						<Suspense fallback={null}>
+							<NavigationEvents />
+						</Suspense>
+
 						<Navbar />
 						{children}
 						<Footer />
