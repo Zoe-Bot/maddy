@@ -3,7 +3,7 @@ import { Pagination } from '@mui/material'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import NProgress from 'nprogress'
 import { useEffect, useRef, useState } from 'react'
-import { Document, Page, pdfjs } from 'react-pdf'
+import { Document, Page } from 'react-pdf'
 import { routes } from '../../services/routes'
 
 type Props = {
@@ -11,8 +11,6 @@ type Props = {
 	pdfUrl: string
 	isAdmin?: boolean
 }
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.js', import.meta.url).toString()
 
 const SinglePagePdfRender: React.FC<Props> = ({ pdfUrl, children, isAdmin }) => {
 	const router = useRouter()

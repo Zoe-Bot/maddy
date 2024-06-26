@@ -3,6 +3,7 @@ import { StyledEngineProvider, ThemeProvider, createTheme } from '@mui/material'
 import { Inter } from 'next/font/google'
 import NextTopLoader from 'nextjs-toploader'
 import React, { Suspense } from 'react'
+import { pdfjs } from 'react-pdf'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
 import { NavigationEvents } from '../NavigationEvents'
@@ -28,6 +29,8 @@ const theme = createTheme({
 		fontFamily: 'Inter, sans-serif',
 	},
 })
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.js', import.meta.url).toString()
 
 export const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
 	return (
