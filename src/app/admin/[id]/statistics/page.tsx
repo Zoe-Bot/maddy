@@ -33,7 +33,7 @@ export default async function Statistics({ params }: Params) {
 					page={highestStats.questions.page ?? 0}
 				/>
 				<StatisticCardHighest
-					headline="Meiste Nichts verstanden"
+					headline="Meiste Komplett Erklären"
 					totalQuestions={highestStats.nothingUnderstood.totalQuestions}
 					totalNothingUnderstood={highestStats.nothingUnderstood.totalNothingUnderstood}
 					slideSet={slideSet}
@@ -47,7 +47,7 @@ export default async function Statistics({ params }: Params) {
 					page={highestStats.problems.page ?? 0}
 				/>
 				<StatisticCardSum headline="Gesamt Fragen" symbol="?" totalCount={sumStats.questions} />
-				<StatisticCardSum headline="Gesamt Nichts verstanden" symbol="x" totalCount={sumStats.nothingUnderstood} />
+				<StatisticCardSum headline="Gesamt Komplett Erklären" symbol="x" totalCount={sumStats.nothingUnderstood} />
 				<StatisticCardSum headline="Gesamt Probleme" symbol="?x" totalCount={sumStats.problems} />
 			</div>
 
