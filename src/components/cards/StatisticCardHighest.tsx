@@ -26,7 +26,7 @@ export const StatisticCardHighest: React.FC<Props> = ({ headline, totalQuestions
 			<Document file={slideSet.pdfUrl}>
 				<Page pageNumber={page} width={230} />
 			</Document>
-			<Link className="absolute inset-0 h-full" href={routes.slideDecks.single(slideSet.id, page)} />
+			<Link className="absolute inset-0 h-full" href={routes.admin.slideDecks.single(slideSet.id, page)} />
 		</div>
 	)
 }
