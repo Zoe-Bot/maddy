@@ -45,7 +45,7 @@ export async function getSlideSetsWithCounts() {
 
 		return slidesetsWithFeedbackCounts
 	} catch (error) {
-		console.error('Error fetching slidesets', error)
+		console.error('Error fetching slidesets with counts', error)
 		return []
 	}
 }
