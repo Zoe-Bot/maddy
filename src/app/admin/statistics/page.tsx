@@ -1,43 +1,10 @@
 import { StatisticCardHighest } from '../../../components/cards/StatisticsCardHighest'
 import { BarChart } from '../../../components/charts/BarChart'
+import { getSlideSetsChartData, getSlideSetsHighestStats } from '../../../services/statistics'
 
 export default async function Statistics() {
-	const highestStats = {
-		questions: {
-			slideset: {
-				id: 1,
-				name: 'Foliensatz 1',
-			},
-			totalQuestions: 0,
-			totalNothingUnderstood: 0,
-		},
-		nothingUnderstood: {
-			slideset: {
-				id: 2,
-				name: 'Foliensatz 2',
-			},
-			totalQuestions: 0,
-			totalNothingUnderstood: 0,
-		},
-		problems: {
-			slideset: {
-				id: 3,
-				name: 'Foliensatz 3',
-			},
-			totalQuestions: 0,
-			totalNothingUnderstood: 0,
-		},
-	}
-
-	const slidesetChartData = [
-		{ label: '1', questions: 0, nothingUnderstood: 0 },
-		{
-			label: '2',
-			questions: 0,
-			nothingUnderstood: 0,
-		},
-		{ label: '3', questions: 0, nothingUnderstood: 0 },
-	]
+	const highestStats = await getSlideSetsHighestStats()
+	const slidesetChartData = await getSlideSetsChartData()
 
 	return (
 		<main className="container py-6">
