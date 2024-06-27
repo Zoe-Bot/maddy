@@ -1,8 +1,6 @@
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { Document, Page } from 'react-pdf'
-import { Chip } from '../../../../components/ui/Chip'
-import { routes } from '../../../../services/routes'
+import { StatisticCardHighest } from '../../../../components/cards/StatisticCardHighest'
+import { StatisticCardSum } from '../../../../components/cards/StatisticCardSum'
 import { getSlideSet } from '../../../../services/slideSet'
 
 type Params = { params: { id: string } }
@@ -23,21 +21,13 @@ export default async function Statistics({ params }: Params) {
 			<h1 className="font-bold text-xl md:text-2xl">{slideSet?.name}</h1>
 			<p className="text-gray-500 mb-2 md:mb-4">{slideSet.uploadDate.toLocaleDateString()}</p>
 
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-				<div className="relative flex items-center justify-between bg-gray-100 p-6">
-					<div>
-						<p className="font-bold mb-1">Meiste Fragen</p>
-						<p className="font-bold text-primary-500 text-xl mb-2">Folie 10</p>
-						<div className="space-x-2">
-							<Chip color="primary">{totalQuestions} ?</Chip>
-							<Chip color="red">{totalNothingUnderstood} x</Chip>
-						</div>
-					</div>
-					<Document file={slideSet.pdfUrl}>
-						<Page pageNumber={10} width={250} />
-					</Document>
-					<Link className="absolute inset-0 h-full" href={routes.slideDecks.single(slideSet.id, 10)} />
-				</div>
+			<div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+				<StatisticCardHighest headline="Meiste Fragen" totalQuestions={totalQuestions} totalNothingUnderstood={totalNothingUnderstood} slideSet={slideSet} page={1} />
+				<StatisticCardHighest headline="Meiste Nichts verstanden" totalQuestions={totalQuestions} totalNothingUnderstood={totalNothingUnderstood} slideSet={slideSet} page={2} />
+				<StatisticCardHighest headline="Meiste Probleme" totalQuestions={totalQuestions} totalNothingUnderstood={totalNothingUnderstood} slideSet={slideSet} page={3} />
+				<StatisticCardSum headline="Gesamt Fragen" symbol="?" totalCount={totalQuestions} />
+				<StatisticCardSum headline="Gesamt Nichts verstanden" symbol="x" totalCount={totalNothingUnderstood} />
+				<StatisticCardSum headline="Gesamt Probleme" symbol="?x" totalCount={totalQuestions + totalNothingUnderstood} />
 			</div>
 		</main>
 	)
