@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { StatisticCardHighest } from '../../../../components/cards/StatisticCardHighest'
+import { StatisticCardHighestSingle } from '../../../../components/cards/StatisticCardHighestSingle'
 import { StatisticCardSum } from '../../../../components/cards/StatisticCardSum'
 import { BarChart } from '../../../../components/charts/BarChart'
 import { getSlideSet } from '../../../../services/slideSet'
@@ -25,21 +25,21 @@ export default async function Statistics({ params }: Params) {
 			<p className="text-gray-500 mb-2 md:mb-4">{slideSet.uploadDate.toLocaleDateString()}</p>
 
 			<div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
-				<StatisticCardHighest
+				<StatisticCardHighestSingle
 					headline="Meiste Fragen"
 					totalQuestions={highestStats.questions.totalQuestions}
 					totalNothingUnderstood={highestStats.questions.totalNothingUnderstood}
 					slideSet={slideSet}
 					page={highestStats.questions.page ?? 0}
 				/>
-				<StatisticCardHighest
+				<StatisticCardHighestSingle
 					headline="Meiste Komplett Erklären"
 					totalQuestions={highestStats.nothingUnderstood.totalQuestions}
 					totalNothingUnderstood={highestStats.nothingUnderstood.totalNothingUnderstood}
 					slideSet={slideSet}
 					page={highestStats.nothingUnderstood.page ?? 0}
 				/>
-				<StatisticCardHighest
+				<StatisticCardHighestSingle
 					headline="Meiste Probleme"
 					totalQuestions={highestStats.problems.totalQuestions}
 					totalNothingUnderstood={highestStats.problems.totalNothingUnderstood}

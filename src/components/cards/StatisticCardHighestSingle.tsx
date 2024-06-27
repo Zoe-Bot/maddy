@@ -12,7 +12,7 @@ type Props = {
 	headline: string
 }
 
-export const StatisticCardHighest: React.FC<Props> = ({ headline, totalQuestions, totalNothingUnderstood, slideSet, page }) => {
+export const StatisticCardHighestSingle: React.FC<Props> = ({ headline, totalQuestions, totalNothingUnderstood, slideSet, page }) => {
 	return (
 		<div className="relative flex items-center justify-between bg-gray-100 gap-2 p-6">
 			<div>
