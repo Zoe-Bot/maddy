@@ -4,6 +4,7 @@ import { Divider, IconButton, Menu, MenuItem } from '@mui/material'
 import { Slideset } from '@prisma/client'
 import Link from 'next/link'
 import { useState } from 'react'
+import { handleExport } from '../../services/export'
 import { routes } from '../../services/routes'
 import { AddEditSlideModal } from '../modal/AddEditSlideModal'
 import { DeleteModal } from '../modal/DeleteModal'
@@ -55,7 +56,7 @@ export const SlideSetListMenu: React.FC<Props> = ({ slideSet }) => {
 						Statistiken
 					</Link>
 				</MenuItem>
-				<MenuItem className="hover:bg-gray-200 px-6" onClick={handleClose}>
+				<MenuItem className="hover:bg-gray-200 px-6" onClick={async () => await handleExport(slideSet)}>
 					PDF exportieren (Probleme)
 				</MenuItem>
 				<MenuItem className="hover:bg-gray-200 px-6" onClick={() => setIsEditModalOpen(true)}>
