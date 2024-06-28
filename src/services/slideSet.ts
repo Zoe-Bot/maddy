@@ -106,3 +106,21 @@ export async function deletePdfFile(pdfUrl: string) {
 		console.error('Error deleting pdf file', error)
 	}
 }
+
+export async function getSlidesetPagesWithFeedback(slidesetId: number): Promise<number[]> {
+	const pages = await prisma.feedback.findMany({
+		where: {
+			slidesetId: slidesetId,
+		},
+		select: {
+			page: true,
+		},
+		distinct: ['page'],
+		orderBy: {
+			page: 'asc',
+		},
+	})
+
+	const pageNumbersArray = pages.map((page) => page.page)
+	return pageNumbersArray
+}
