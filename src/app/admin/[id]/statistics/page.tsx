@@ -7,7 +7,7 @@ import { getSingleSlideSetChartData, getSingleSlideSetHighestStats, getSingleSli
 
 type Params = { params: { id: string } }
 
-export default async function Statistics({ params }: Params) {
+export default async function SingleSlidesetStatistics({ params }: Params) {
 	const { id } = params
 	const slideSet = await getSlideSet(parseInt(id))
 
