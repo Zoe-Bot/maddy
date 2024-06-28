@@ -116,7 +116,11 @@ export async function getSlidesetPagesWithFeedback(slidesetId: number): Promise<
 			page: true,
 		},
 		distinct: ['page'],
+		orderBy: {
+			page: 'asc',
+		},
 	})
 
-	return pages.map((page) => page.page)
+	const pageNumbersArray = pages.map((page) => page.page)
+	return pageNumbersArray
 }

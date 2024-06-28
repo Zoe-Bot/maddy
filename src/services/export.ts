@@ -6,6 +6,7 @@ export async function handleExport(slideset: Slideset) {
 	try {
 		// Get the pages with feedback for the slideset
 		const pagesWithFeedback = await getSlidesetPagesWithFeedback(slideset.id)
+		const pagesIndex = pagesWithFeedback.map((page) => page - 1)
 
 		// Fetch the PDF file
 		const response = await fetch(slideset.pdfUrl)
@@ -18,7 +19,7 @@ export async function handleExport(slideset: Slideset) {
 		const newPdfDoc = await PDFDocument.create()
 
 		// Copy the pages you want to extract from the original PDF
-		const copiedPages = await newPdfDoc.copyPages(pdfDoc, pagesWithFeedback)
+		const copiedPages = await newPdfDoc.copyPages(pdfDoc, pagesIndex)
 
 		// Add the extracted pages to the new PDF document
 		copiedPages.forEach((page) => {
