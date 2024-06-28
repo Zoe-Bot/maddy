@@ -10,7 +10,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 type Props = {
 	data: { label: string; nothingUnderstood: number; questions: number }[]
 	xAxisLabel: string
-	slidesetId: number
+	slidesetId?: number
 }
 
 export const BarChart: React.FC<Props> = ({ data, xAxisLabel, slidesetId }) => {
@@ -70,7 +70,8 @@ export const BarChart: React.FC<Props> = ({ data, xAxisLabel, slidesetId }) => {
 			if (elements.length > 0) {
 				const elementIndex = elements[0].index
 				const barLabel = data[elementIndex].label
-				router.push(routes.admin.slideDecks.single(slidesetId, Number(barLabel)))
+				if (slidesetId) router.push(routes.admin.slideDecks.single(slidesetId, Number(barLabel)))
+				else router.push(routes.admin.slideDecks.single(Number(barLabel), 1))
 			}
 		},
 		onHover: (event, elements) => {

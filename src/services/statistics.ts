@@ -177,3 +177,88 @@ export async function getSingleSlideSetSumStats(slidesetId: number) {
 
 	return sumStats
 }
+
+export async function getSlideSetsChartData() {
+	try {
+		// Holen aller Slidesets
+		const slidesets = await prisma.slideset.findMany()
+
+		// Holen der Anzahl der Fragen und "nothing understood" Feedbacks pro Slideset
+		const feedbacks = await prisma.feedback.groupBy({
+			by: ['slidesetId', 'feedbackType'],
+			_count: {
+				slidesetId: true,
+			},
+		})
+
+		// Initialisiere die Ergebnisse für jedes Slideset
+		const results = slidesets.map((slideset) => ({
+			label: slideset.id.toString(),
+			questions: 0,
+			nothingUnderstood: 0,
+		}))
+
+		// Fülle die Ergebnisse mit den Feedback-Daten
+		feedbacks.forEach((feedback) => {
+			const slidesetResult = results.find((result) => result.label === feedback.slidesetId.toString())
+			if (slidesetResult) {
+				if (feedback.feedbackType === 'question') {
+					slidesetResult.questions = feedback._count.slidesetId
+				} else if (feedback.feedbackType === 'nothing_understood') {
+					slidesetResult.nothingUnderstood = feedback._count.slidesetId
+				}
+			}
+		})
+
+		return results
+	} catch (error) {
+		console.error(error)
+		return []
+	}
+}
+
+export async function getSlideSetsHighestStats() {
+	try {
+		const slidesets = await prisma.slideset.findMany()
+		const allSlidesetStats = await getSlideSetsChartData()
+
+		const mostQuestionsSlideset = allSlidesetStats.reduce((prev, current) => (prev.questions > current.questions ? prev : current))
+		const mostNothingUnderstoodSlideset = allSlidesetStats.reduce((prev, current) => (prev.nothingUnderstood > current.nothingUnderstood ? prev : current))
+		const mostProblemsSlideset = allSlidesetStats.reduce((prev, current) => (prev.questions + prev.nothingUnderstood > current.questions + current.nothingUnderstood ? prev : current))
+
+		const result = {
+			questions: {
+				slideset: {
+					id: Number(mostQuestionsSlideset.label),
+					name: slidesets.find((slideset) => slideset.id.toString() === mostQuestionsSlideset.label)!.name,
+				},
+				totalQuestions: mostQuestionsSlideset.questions,
+				totalNothingUnderstood: mostQuestionsSlideset.nothingUnderstood,
+			},
+			nothingUnderstood: {
+				slideset: {
+					id: Number(mostNothingUnderstoodSlideset.label),
+					name: slidesets.find((s) => s.id.toString() === mostNothingUnderstoodSlideset.label)!.name,
+				},
+				totalQuestions: mostNothingUnderstoodSlideset.questions,
+				totalNothingUnderstood: mostNothingUnderstoodSlideset.nothingUnderstood,
+			},
+			problems: {
+				slideset: {
+					id: Number(mostProblemsSlideset.label),
+					name: slidesets.find((s) => s.id.toString() === mostProblemsSlideset.label)!.name,
+				},
+				totalQuestions: mostProblemsSlideset.questions,
+				totalNothingUnderstood: mostProblemsSlideset.nothingUnderstood,
+			},
+		}
+		return result
+	} catch (error) {
+		console.error(error)
+		return {
+			questions: { slideset: { id: 0, name: '' }, totalQuestions: 0, totalNothingUnderstood: 0 },
+			nothingUnderstood: { slideset: { id: 0, name: '' }, totalQuestions: 0, totalNothingUnderstood: 0 },
+			problems: { slideset: { id: 0, name: '' }, totalQuestions: 0, totalNothingUnderstood: 0 },
+		}
+	}
+}
