@@ -2,7 +2,7 @@
 import { Pagination } from '@mui/material'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import NProgress from 'nprogress'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Document, Page } from 'react-pdf'
 import { routes } from '../../services/routes'
 
@@ -25,7 +25,7 @@ const SinglePagePdfRender: React.FC<Props> = ({ pdfUrl, children, isAdmin }) => 
 	const parentRef = useRef<HTMLDivElement | null>(null)
 
 	const [pageWidth, setPageWidth] = useState(1000)
-	const [totalPages, setTotalPages] = useState<number>()
+	const [totalPages, setTotalPages] = useState<number>(0)
 
 	/** For handle resize of pdf according to parent. */
 	useEffect(() => {
@@ -43,6 +43,30 @@ const SinglePagePdfRender: React.FC<Props> = ({ pdfUrl, children, isAdmin }) => 
 			window.removeEventListener('resize', updatePageWidth)
 		}
 	}, [])
+
+	const handleKeyDown = useCallback(
+		(event: KeyboardEvent) => {
+			const pageNum = Number(page)
+			const idNum = Number(id)
+
+			if (event.key === 'ArrowLeft' && pageNum > 1) {
+				NProgress.start()
+				router.push(baseUrl(idNum, pageNum - 1))
+			} else if (event.key === 'ArrowRight' && pageNum < totalPages) {
+				NProgress.start()
+				router.push(baseUrl(idNum, pageNum + 1))
+			}
+		},
+		[id, page, totalPages, router, baseUrl],
+	)
+
+	useEffect(() => {
+		document.addEventListener('keydown', handleKeyDown)
+
+		return () => {
+			document.removeEventListener('keydown', handleKeyDown)
+		}
+	}, [handleKeyDown])
 
 	const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
 		setTotalPages(numPages)

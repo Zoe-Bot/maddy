@@ -22,10 +22,7 @@ export async function handleExport(slideset: Slideset) {
 		const copiedPages = await newPdfDoc.copyPages(pdfDoc, pagesIndex)
 
 		// Add the extracted pages to the new PDF document
-		copiedPages.forEach((page) => {
-			console.log(page)
-			return newPdfDoc.addPage(page)
-		})
+		copiedPages.forEach((page) => newPdfDoc.addPage(page))
 
 		// Save the new PDF document to a Uint8Array
 		const newPdfBytes = await newPdfDoc.save()
