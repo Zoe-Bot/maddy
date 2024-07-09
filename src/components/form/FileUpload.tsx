@@ -1,7 +1,7 @@
 import { DocumentIcon } from '@heroicons/react/20/solid'
 import { Slideset } from '@prisma/client'
 import { Field, FieldProps } from 'formik'
-import { useRef, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { Button } from '../button/Button'
 import { FormError } from '../errors/FormError'
 
@@ -9,10 +9,12 @@ type Props = {
 	name: string
 	file: File | null
 	slideset?: Slideset
-	setHasFileEdited: any
+	setHasFileEdited: Dispatch<SetStateAction<boolean>>
+	shouldResetFile: boolean
+	setShouldResetFile: Dispatch<SetStateAction<boolean>>
 }
 
-export const FileUpload: React.FC<Props> = ({ name, file, slideset, setHasFileEdited }) => {
+export const FileUpload: React.FC<Props> = ({ name, file, slideset, setHasFileEdited, shouldResetFile, setShouldResetFile }) => {
 	const [uploadedFile, setUploadedFile] = useState<File | null>(file)
 	const [editFile, setEditFile] = useState<Slideset | null>(slideset ?? null)
 	const [dragActive, setDragActive] = useState(false)
@@ -40,7 +42,7 @@ export const FileUpload: React.FC<Props> = ({ name, file, slideset, setHasFileEd
 
 		// File type not pdf
 		if (file.type !== 'application/pdf') {
-			formikProps.form.setFieldError(name, 'Only pdf files supported.')
+			formikProps.form.setFieldError(name, 'Only PDF files supported.')
 			return
 		}
 
@@ -105,11 +107,20 @@ export const FileUpload: React.FC<Props> = ({ name, file, slideset, setHasFileEd
 	 * @param formikProps helper
 	 */
 	const resetFile = (formikProps: FieldProps<any>) => {
-		setHasFileEdited(null)
+		setHasFileEdited(false)
 		setUploadedFile(null)
 		setEditFile(null)
 		formikProps.form.setFieldValue(formikProps.field.name, null)
 	}
+
+	useEffect(() => {
+		if (shouldResetFile) {
+			setHasFileEdited(false)
+			setUploadedFile(null)
+			setEditFile(null)
+			setShouldResetFile(false)
+		}
+	}, [shouldResetFile, setHasFileEdited, setShouldResetFile])
 
 	return (
 		<Field name={name}>
@@ -131,7 +142,7 @@ export const FileUpload: React.FC<Props> = ({ name, file, slideset, setHasFileEd
 								<label className="flex items-center justify-center text-gray-500 h-full cursor-pointer" htmlFor="input-file-upload">
 									<DocumentIcon className={`w-16 h-16 text-5xl ${dragActive ? 'text-primary-600' : ''} mr-4`} />
 									<div>
-										<span className="font-medium text-gray-700 mr-1">Pdf-Datei Drag and Drop oder</span>
+										<span className="font-medium text-gray-700 mr-1">PDF-Datei Drag and Drop oder</span>
 										{/* Browse button */}
 										<button type="button" onClick={() => inputRef.current?.click()} className="inline font-medium text-primary-600 hover:text-primary-700">
 											Suchen

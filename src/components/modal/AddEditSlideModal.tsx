@@ -1,5 +1,5 @@
 import { ArrowPathIcon, PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
-import { IconButton, Modal, TextField, TextareaAutosize } from '@mui/material'
+import { IconButton, Modal, TextField } from '@mui/material'
 import { Slideset } from '@prisma/client'
 import { upload } from '@vercel/blob/client'
 import { Field, FieldProps, Form, Formik } from 'formik'
@@ -25,6 +25,7 @@ export type SlideSetDto = {
 
 export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slideset }) => {
 	const isEditMode = Boolean(slideset)
+	const [shouldResetFile, setShouldResetFile] = useState<boolean>(false)
 	const [hasPdfFileEdited, setHasPdfFileEdited] = useState<boolean>(false)
 	const initialValues: SlideSetDto = {
 		pdf: null,
@@ -35,7 +36,7 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slide
 	const validationSchema = yup.object().shape({
 		name: yup.string().min(3, 'Name muss mindestens 3 Zeichen haben.').max(70, 'Name darf maximal 70 Zeichen haben.').required('Name ist erforderlich.'),
 		...(isEditMode && hasPdfFileEdited && { pdf: yup.mixed().required('PDF Datei ist erforderlich.') }),
-		description: yup.string().max(500, 'Beschreibung darf maximal 500 Zeichen haben.'),
+		description: yup.string().max(250, 'Beschreibung darf maximal 250 Zeichen haben.'),
 	})
 
 	return (
@@ -86,8 +87,8 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slide
 					{(formik) => (
 						<Form>
 							<div>
-								<Label name="pdf">Foliensatz Pdf Datei</Label>
-								<FileUpload name="pdf" file={formik.values.pdf} slideset={slideset} setHasFileEdited={setHasPdfFileEdited} />
+								<Label name="pdf">Foliensatz PDF-Datei</Label>
+								<FileUpload name="pdf" file={formik.values.pdf} slideset={slideset} setHasFileEdited={setHasPdfFileEdited} shouldResetFile={shouldResetFile} setShouldResetFile={setShouldResetFile} />
 
 								<Label name="name">Name</Label>
 								<Field name="name">
@@ -109,21 +110,42 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slide
 								<Label name="description">Beschreibung</Label>
 								<Field name="description">
 									{({ field }: FieldProps) => (
-										<TextareaAutosize
-											{...field}
-											placeholder="Kurze Beschreibung zum Inhalt des Foliensatzes"
-											className="bg-gray-100 rounded-md px-3 py-2 resize-none w-full mb-2 md:mb-4"
-											minRows={3}
-										/>
+										<div className="mb-2 md:mb-4">
+											<TextField
+												{...field}
+												placeholder="Kurze Beschreibung zum Inhalt des Foliensatzes"
+												className="[&_.MuiFilledInput-root]:bg-gray-100 [&_.MuiFilledInput-root]:pt-3"
+												variant="filled"
+												multiline
+												fullWidth
+												minRows={3}
+												maxRows={6}
+											/>
+											<FormError field="description" />
+										</div>
 									)}
 								</Field>
 
 								<div className="flex flex-col md:flex-row justify-between">
-									<Button kind="tertiary" onClick={() => formik.resetForm()} type="button">
+									<Button
+										kind="tertiary"
+										onClick={() => {
+											if (!isEditMode) {
+												setShouldResetFile(true)
+											}
+											formik.resetForm()
+										}}
+										type="button"
+									>
 										Zurücksetzen
 									</Button>
 
-									<Button type="submit" disabled={(isEditMode && formik.values.pdf ? false : !formik.isValid) || formik.isSubmitting} Icon={isEditMode ? ArrowPathIcon : PlusIcon}>
+									<Button
+										type="submit"
+										loading={formik.isSubmitting}
+										disabled={(isEditMode && formik.values.pdf ? false : !formik.isValid) || formik.isSubmitting}
+										Icon={isEditMode ? ArrowPathIcon : PlusIcon}
+									>
 										Foliensatz {isEditMode ? 'bearbeiten' : 'hinzufügen'}
 									</Button>
 								</div>
