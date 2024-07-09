@@ -1,5 +1,5 @@
 import { ArrowPathIcon, PlusIcon, XMarkIcon } from '@heroicons/react/20/solid'
-import { IconButton, Modal, TextField, TextareaAutosize } from '@mui/material'
+import { IconButton, Modal, TextField } from '@mui/material'
 import { Slideset } from '@prisma/client'
 import { upload } from '@vercel/blob/client'
 import { Field, FieldProps, Form, Formik } from 'formik'
@@ -35,7 +35,7 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slide
 	const validationSchema = yup.object().shape({
 		name: yup.string().min(3, 'Name muss mindestens 3 Zeichen haben.').max(70, 'Name darf maximal 70 Zeichen haben.').required('Name ist erforderlich.'),
 		...(isEditMode && hasPdfFileEdited && { pdf: yup.mixed().required('PDF Datei ist erforderlich.') }),
-		description: yup.string().max(500, 'Beschreibung darf maximal 500 Zeichen haben.'),
+		description: yup.string().max(250, 'Beschreibung darf maximal 250 Zeichen haben.'),
 	})
 
 	return (
@@ -109,12 +109,19 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slide
 								<Label name="description">Beschreibung</Label>
 								<Field name="description">
 									{({ field }: FieldProps) => (
-										<TextareaAutosize
-											{...field}
-											placeholder="Kurze Beschreibung zum Inhalt des Foliensatzes"
-											className="bg-gray-100 rounded-md px-3 py-2 resize-none w-full mb-2 md:mb-4"
-											minRows={3}
-										/>
+										<div className="mb-2 md:mb-4">
+											<TextField
+												{...field}
+												placeholder="Kurze Beschreibung zum Inhalt des Foliensatzes"
+												className="[&_.MuiFilledInput-root]:bg-gray-100 [&_.MuiFilledInput-root]:pt-3"
+												variant="filled"
+												multiline
+												fullWidth
+												minRows={3}
+												maxRows={6}
+											/>
+											<FormError field="description" />
+										</div>
 									)}
 								</Field>
 
