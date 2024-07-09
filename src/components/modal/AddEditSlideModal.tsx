@@ -140,7 +140,12 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slide
 										Zurücksetzen
 									</Button>
 
-									<Button type="submit" disabled={(isEditMode && formik.values.pdf ? false : !formik.isValid) || formik.isSubmitting} Icon={isEditMode ? ArrowPathIcon : PlusIcon}>
+									<Button
+										type="submit"
+										loading={formik.isSubmitting}
+										disabled={(isEditMode && formik.values.pdf ? false : !formik.isValid) || formik.isSubmitting}
+										Icon={isEditMode ? ArrowPathIcon : PlusIcon}
+									>
 										Foliensatz {isEditMode ? 'bearbeiten' : 'hinzufügen'}
 									</Button>
 								</div>
