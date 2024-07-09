@@ -40,7 +40,7 @@ export const FileUpload: React.FC<Props> = ({ name, file, slideset, setHasFileEd
 
 		// File type not pdf
 		if (file.type !== 'application/pdf') {
-			formikProps.form.setFieldError(name, 'Only pdf files supported.')
+			formikProps.form.setFieldError(name, 'Only PDF files supported.')
 			return
 		}
 
@@ -131,7 +131,7 @@ export const FileUpload: React.FC<Props> = ({ name, file, slideset, setHasFileEd
 								<label className="flex items-center justify-center text-gray-500 h-full cursor-pointer" htmlFor="input-file-upload">
 									<DocumentIcon className={`w-16 h-16 text-5xl ${dragActive ? 'text-primary-600' : ''} mr-4`} />
 									<div>
-										<span className="font-medium text-gray-700 mr-1">Pdf-Datei Drag and Drop oder</span>
+										<span className="font-medium text-gray-700 mr-1">PDF-Datei Drag and Drop oder</span>
 										{/* Browse button */}
 										<button type="button" onClick={() => inputRef.current?.click()} className="inline font-medium text-primary-600 hover:text-primary-700">
 											Suchen

@@ -86,7 +86,7 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slide
 					{(formik) => (
 						<Form>
 							<div>
-								<Label name="pdf">Foliensatz Pdf Datei</Label>
+								<Label name="pdf">Foliensatz PDF-Datei</Label>
 								<FileUpload name="pdf" file={formik.values.pdf} slideset={slideset} setHasFileEdited={setHasPdfFileEdited} />
 
 								<Label name="name">Name</Label>
