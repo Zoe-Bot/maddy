@@ -25,6 +25,7 @@ export type SlideSetDto = {
 
 export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slideset }) => {
 	const isEditMode = Boolean(slideset)
+	const [shouldResetFile, setShouldResetFile] = useState<boolean>(false)
 	const [hasPdfFileEdited, setHasPdfFileEdited] = useState<boolean>(false)
 	const initialValues: SlideSetDto = {
 		pdf: null,
@@ -87,7 +88,7 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slide
 						<Form>
 							<div>
 								<Label name="pdf">Foliensatz PDF-Datei</Label>
-								<FileUpload name="pdf" file={formik.values.pdf} slideset={slideset} setHasFileEdited={setHasPdfFileEdited} />
+								<FileUpload name="pdf" file={formik.values.pdf} slideset={slideset} setHasFileEdited={setHasPdfFileEdited} shouldResetFile={shouldResetFile} setShouldResetFile={setShouldResetFile} />
 
 								<Label name="name">Name</Label>
 								<Field name="name">
@@ -126,7 +127,16 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slide
 								</Field>
 
 								<div className="flex flex-col md:flex-row justify-between">
-									<Button kind="tertiary" onClick={() => formik.resetForm()} type="button">
+									<Button
+										kind="tertiary"
+										onClick={() => {
+											if (!isEditMode) {
+												setShouldResetFile(true)
+											}
+											formik.resetForm()
+										}}
+										type="button"
+									>
 										Zurücksetzen
 									</Button>
 
