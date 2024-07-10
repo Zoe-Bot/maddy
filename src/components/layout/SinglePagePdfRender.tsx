@@ -83,6 +83,7 @@ const SinglePagePdfRender: React.FC<Props> = ({ pdfUrl, children, isAdmin }) => 
 					<Pagination
 						color="primary"
 						count={totalPages}
+						siblingCount={6}
 						page={Number(page)}
 						onChange={(_, number) => {
 							// Need to start this manually because the package does not support router.push
