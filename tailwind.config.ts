@@ -51,6 +51,10 @@ const config: Config = {
 			},
 		},
 	},
-	plugins: [],
+	plugins: [
+		function ({ addVariant }: { addVariant: (name: string, variant: string) => void }) {
+			addVariant('fullscreen', '&:fullscreen')
+		},
+	],
 }
 export default config
