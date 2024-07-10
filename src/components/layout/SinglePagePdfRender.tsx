@@ -1,4 +1,5 @@
 'use client'
+import { ArrowsPointingOutIcon } from '@heroicons/react/20/solid'
 import { Pagination } from '@mui/material'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import NProgress from 'nprogress'
@@ -23,24 +24,27 @@ const SinglePagePdfRender: React.FC<Props> = ({ pdfUrl, children, isAdmin }) => 
 	const page = searchParams.get('page') || '1'
 
 	const parentRef = useRef<HTMLDivElement | null>(null)
+	const documentRef = useRef<HTMLDivElement | null>(null)
 
 	const [pageWidth, setPageWidth] = useState(1000)
 	const [totalPages, setTotalPages] = useState<number>(0)
 
 	/** For handle resize of pdf according to parent. */
 	useEffect(() => {
-		const updatePageWidth = () => {
-			if (parentRef.current) {
-				const parentWidth = parentRef.current.offsetWidth
-				setPageWidth(parentWidth)
+		const handleResize = () => {
+			if (document.fullscreenElement) {
+				setPageWidth(window.innerWidth)
+			} else if (parentRef.current) {
+				setPageWidth(parentRef.current.offsetWidth)
 			}
 		}
 
-		window.addEventListener('resize', updatePageWidth)
-		updatePageWidth()
+		document.addEventListener('fullscreenchange', handleResize)
+		window.addEventListener('resize', handleResize)
 
 		return () => {
-			window.removeEventListener('resize', updatePageWidth)
+			document.removeEventListener('fullscreenchange', handleResize)
+			window.removeEventListener('resize', handleResize)
 		}
 	}, [])
 
@@ -55,6 +59,8 @@ const SinglePagePdfRender: React.FC<Props> = ({ pdfUrl, children, isAdmin }) => 
 			} else if (event.key === 'ArrowRight' && pageNum < totalPages) {
 				NProgress.start()
 				router.push(baseUrl(idNum, pageNum + 1))
+			} else if (event.key === 'f' || event.key === 'F') {
+				toggleFullScreen()
 			}
 		},
 		[id, page, totalPages, router, baseUrl],
@@ -68,6 +74,16 @@ const SinglePagePdfRender: React.FC<Props> = ({ pdfUrl, children, isAdmin }) => 
 		}
 	}, [handleKeyDown])
 
+	const toggleFullScreen = () => {
+		if (!document.fullscreenElement) {
+			documentRef.current?.requestFullscreen().catch((err) => {
+				console.error(`Error attempting to enable fullscreen mode: ${err.message} (${err.name})`)
+			})
+		} else {
+			document.exitFullscreen()
+		}
+	}
+
 	const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
 		setTotalPages(numPages)
 	}
@@ -75,9 +91,16 @@ const SinglePagePdfRender: React.FC<Props> = ({ pdfUrl, children, isAdmin }) => 
 	return (
 		<main className="container xl:flex gap-8 py-6">
 			<div ref={parentRef} className="w-full xl:w-3/4">
-				<Document file={pdfUrl} loading={<div style={{ width: pageWidth }} className="h-[600px] bg-gray-200 animate-pulse" />} onLoadSuccess={onDocumentLoadSuccess}>
-					<Page loading={<div style={{ width: pageWidth }} className="h-[600px] bg-white" />} pageNumber={Number(page)} width={pageWidth} className="border border-gray-400" />
-				</Document>
+				<div ref={documentRef} className="relative fullscreen:flex fullscreen:justify-center fullscreen:items-center">
+					<div className="absolute bottom-0 right-0 z-10 opacity-50 hover:opacity-100 transition-opacity">
+						<button onClick={toggleFullScreen} className="p-4">
+							<ArrowsPointingOutIcon className="w-5 h-5" />
+						</button>
+					</div>
+					<Document file={pdfUrl} loading={<div style={{ width: pageWidth }} className="h-[600px] bg-gray-200 animate-pulse" />} onLoadSuccess={onDocumentLoadSuccess}>
+						<Page loading={<div style={{ width: pageWidth }} className="h-[600px] bg-white" />} pageNumber={Number(page)} width={pageWidth} className="border border-gray-400" />
+					</Document>
+				</div>
 
 				<div className="flex justify-center mt-4">
 					<Pagination
