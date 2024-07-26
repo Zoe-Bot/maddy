@@ -26,7 +26,7 @@ export async function getSlideSetsWithCounts() {
 				},
 				feedback: {
 					where: {
-						feedbackType: 'nothing_understood',
+						OR: [{ feedbackType: 'nothing_understood' }, { feedbackType: 'everything_understood' }],
 					},
 					select: {
 						feedbackType: true,
@@ -35,13 +35,19 @@ export async function getSlideSetsWithCounts() {
 			},
 		})
 
-		const slidesetsWithFeedbackCounts = slidesets.map((slideset) => ({
-			...slideset,
-			feedbackCounts: {
-				questions: slideset._count.feedback,
-				nothing_understood: slideset.feedback.length,
-			},
-		}))
+		const slidesetsWithFeedbackCounts = slidesets.map((slideset) => {
+			const nothingUnderstoodCount = slideset.feedback.filter((fb) => fb.feedbackType === 'nothing_understood').length
+			const everythingUnderstoodCount = slideset.feedback.filter((fb) => fb.feedbackType === 'everything_understood').length
+
+			return {
+				...slideset,
+				feedbackCounts: {
+					questions: slideset._count.feedback,
+					nothing_understood: nothingUnderstoodCount,
+					everything_understood: everythingUnderstoodCount,
+				},
+			}
+		})
 
 		return slidesetsWithFeedbackCounts
 	} catch (error) {
@@ -49,7 +55,6 @@ export async function getSlideSetsWithCounts() {
 		return []
 	}
 }
-
 export async function getSlideSet(id: number) {
 	try {
 		const slideSet = await prisma.slideset.findUnique({

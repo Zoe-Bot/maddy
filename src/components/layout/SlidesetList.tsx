@@ -1,6 +1,6 @@
-import { ChevronRightIcon } from '@heroicons/react/20/solid'
+import { CheckIcon, ChevronRightIcon } from '@heroicons/react/16/solid'
 import Link from 'next/link'
-import { getTotalNothingUnderstoodFeedbacks, getTotalQuestionFeedbacks } from '../../services/feedback'
+import { getTotalEverythingUnderstoodFeedbacks, getTotalNothingUnderstoodFeedbacks, getTotalQuestionFeedbacks } from '../../services/feedback'
 import { routes } from '../../services/routes'
 import { getSlideSetsWithCounts } from '../../services/slideSet'
 import { Chip } from '../ui/Chip'
@@ -14,6 +14,7 @@ export const SlideSetList: React.FC<Props> = async ({ isAdmin }) => {
 	const slideSets = await getSlideSetsWithCounts()
 	const totalQuestions = await getTotalQuestionFeedbacks()
 	const totalNothingUnderstood = await getTotalNothingUnderstoodFeedbacks()
+	const totalEverythingUnderstood = await getTotalEverythingUnderstoodFeedbacks()
 
 	return (
 		<>
@@ -30,8 +31,11 @@ export const SlideSetList: React.FC<Props> = async ({ isAdmin }) => {
 							<div className="flex items-center gap-2 min-w-fit">
 								<Chip color="primary">{slideSet.feedbackCounts.questions} ?</Chip>
 								<Chip color="red">{slideSet.feedbackCounts.nothing_understood} x</Chip>
+								<Chip color="green">
+									{slideSet.feedbackCounts.everything_understood} <CheckIcon className="inline size-5" />
+								</Chip>
 
-								{!isAdmin && <ChevronRightIcon className="w-8 h-8 text-gray-400 ml-5" />}
+								{!isAdmin && <ChevronRightIcon className="size-8 text-gray-400 ml-5" />}
 							</div>
 						</Link>
 
@@ -42,8 +46,12 @@ export const SlideSetList: React.FC<Props> = async ({ isAdmin }) => {
 
 			<div className="text-center">
 				<p>
-					Das sind <span className="font-bold">{slideSets.length} Folien</span> mit ingesamt <Chip color="primary">{totalQuestions} ?</Chip> {totalQuestions === 1 ? 'Frage' : 'Fragen'} und{' '}
-					<Chip color="red">{totalNothingUnderstood} x</Chip> nicht verstanden.
+					Das sind <span className="font-bold">{slideSets.length} Folien</span> mit ingesamt <Chip color="red">{totalNothingUnderstood} x</Chip> nicht verstanden ,{' '}
+					<Chip color="primary">{totalQuestions} ?</Chip> {totalQuestions === 1 ? 'Frage' : 'Fragen'} und{' '}
+					<Chip color="green">
+						{totalEverythingUnderstood} <CheckIcon className="inline size-5" />
+					</Chip>{' '}
+					komplett verstanden.
 				</p>
 			</div>
 		</>

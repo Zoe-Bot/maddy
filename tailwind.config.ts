@@ -4,15 +4,15 @@ const config: Config = {
 	content: ['./src/pages/**/*.{js,ts,jsx,tsx,mdx}', './src/components/**/*.{js,ts,jsx,tsx,mdx}', './src/app/**/*.{js,ts,jsx,tsx,mdx}'],
 	safelist: [
 		{
-			pattern: /border-{primary|red|gray}-{600|700|800}/,
+			pattern: /border-{primary|red|green|gray}-{600|700|800}/,
 			variants: ['hover', 'focus'],
 		},
 		{
-			pattern: /bg-{primary|red|gray}-{600|700|800}/,
+			pattern: /bg-{primary|red|green|gray}-{600|700|800}/,
 			variants: ['hover', 'focus'],
 		},
 		{
-			pattern: /text-{primary|red|gray}-{600|700|800}/,
+			pattern: /text-{primary|red|green|gray}-{600|700|800}/,
 		},
 	],
 	theme: {

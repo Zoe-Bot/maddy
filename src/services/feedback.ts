@@ -102,6 +102,21 @@ export async function getTotalNothingUnderstoodFeedbacks(): Promise<number> {
 	}
 }
 
+export async function getTotalEverythingUnderstoodFeedbacks(): Promise<number> {
+	try {
+		const totalEverythingUnderstood = await prisma.feedback.count({
+			where: {
+				feedbackType: 'everything_understood',
+			},
+		})
+
+		return totalEverythingUnderstood
+	} catch (error) {
+		console.error('Error fetching total everything understood feedbacks', error)
+		return 0
+	}
+}
+
 export async function getQuestionFeedbacksPerSlidesetAndPage({ slidesetId, page }: { slidesetId: number; page: number }): Promise<number> {
 	try {
 		const questionFeedbacks = await prisma.feedback.count({
