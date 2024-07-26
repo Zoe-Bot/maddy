@@ -32,4 +32,5 @@ model Feedback {
 enum FeedbackType {
     question
     nothing_understood
+    everything_understood
 }

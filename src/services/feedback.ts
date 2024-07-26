@@ -135,3 +135,20 @@ export async function getNothingUnderstoodFeedbacksPerSlidesetAndPage({ slideset
 		return 0
 	}
 }
+
+export async function getEverythingUnderstoodFeedbacksPerSlidesetAndPage({ slidesetId, page }: { slidesetId: number; page: number }): Promise<number> {
+	try {
+		const everythingUnderstoodFeedbacks = await prisma.feedback.count({
+			where: {
+				slidesetId,
+				page,
+				feedbackType: 'everything_understood',
+			},
+		})
+
+		return everythingUnderstoodFeedbacks
+	} catch (error) {
+		console.error('Error fetching everything understood feedbacks', error)
+		return 0
+	}
+}
