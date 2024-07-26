@@ -3,7 +3,7 @@ import { ArrowPathIcon, HandRaisedIcon } from '@heroicons/react/20/solid'
 import { FeedbackType } from '@prisma/client'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
-import { createFeedback, deleteFeedback, getFeedbackFromUser, getNothingUnderstoodFeedbacksPerSlidesetAndPage, getQuestionFeedbacksPerSlidesetAndPage } from '../../services/feedback'
+import { deleteFeedback, getFeedbackFromUser, getNothingUnderstoodFeedbacksPerSlidesetAndPage, getQuestionFeedbacksPerSlidesetAndPage, setFeedback } from '../../services/feedback'
 import { getUserId } from '../../services/user'
 import { Button } from './Button'
 
@@ -21,6 +21,7 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 	const [totalQuestions, setTotalQuestions] = useState<number>(0)
 	const [totalNothingUnderstood, setTotalNothingUnderstood] = useState<number>(0)
 	const [isLoadingTotalFeedback, setIsLoadingTotalFeedback] = useState<boolean>(true)
+	const [isLoadingFeedback, setIsLoadingFeedback] = useState<boolean>(false)
 
 	useEffect(() => {
 		const getFeedback = async () => {
@@ -56,27 +57,26 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 			feedbackType,
 		}
 
-		if (activeButton === feedbackType) {
-			// If the button is active, remove the feedback
-			setActiveButton(null)
-			await deleteFeedback(feedback)
-		} else {
-			// If a different button is clicked, remove the feedback for the previously active button
-			if (activeButton) {
-				await deleteFeedback({
-					...feedback,
-					feedbackType: activeButton,
-				})
+		try {
+			setIsLoadingFeedback(true)
+			if (activeButton === feedbackType) {
+				// If the button is active, remove the feedback
+				setActiveButton(null)
+				await deleteFeedback(feedback)
+			} else {
+				setActiveButton(feedbackType)
+				await setFeedback(feedback)
 			}
-			// Activate the new button and create the feedback
-			setActiveButton(feedbackType)
-			await createFeedback(feedback)
+		} catch (error) {
+			setActiveButton(activeButton)
+		} finally {
+			setIsLoadingFeedback(false)
 		}
 	}
 
 	return (
 		<div className="flex flex-col space-y-2">
-			<Button onClick={() => handleFeedback('question')} kind={activeButton === 'question' ? 'primary' : 'secondary'}>
+			<Button disabled={isLoadingFeedback} onClick={() => handleFeedback('question')} kind={activeButton === 'question' ? 'primary' : 'secondary'}>
 				<div className="flex justify-between items-center">
 					<HandRaisedIcon className={`${activeButton === 'question' ? '' : 'opacity-0'} w-6 h-6 mr-2`} />
 					<p className="w-56 mr-6">Ich habe eine kleine Frage</p>
@@ -84,7 +84,7 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 				</div>
 			</Button>
 
-			<Button onClick={() => handleFeedback('nothing_understood')} kind={activeButton === 'nothing_understood' ? 'primary' : 'secondary'}>
+			<Button disabled={isLoadingFeedback} onClick={() => handleFeedback('nothing_understood')} kind={activeButton === 'nothing_understood' ? 'primary' : 'secondary'}>
 				<div className="flex justify-between items-center">
 					<HandRaisedIcon className={`${activeButton === 'nothing_understood' ? '' : 'opacity-0'} w-6 h-6 mr-2`} />
 					<p className="w-56 mr-6">Ganze Folie erklären</p>

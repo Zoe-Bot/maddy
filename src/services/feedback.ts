@@ -27,15 +27,14 @@ export async function getFeedbackFromUser({ slidesetId, page, userId }: Feedback
 	}
 }
 
-export async function createFeedback(feedback: FeedbackDto & { feedbackType: FeedbackType }) {
+export async function setFeedback(feedback: FeedbackDto & { feedbackType: FeedbackType }) {
 	try {
 		await prisma.feedback.upsert({
 			where: {
-				userId_slidesetId_page_feedbackType: {
+				userId_slidesetId_page: {
 					userId: feedback.userId,
 					slidesetId: feedback.slidesetId,
 					page: feedback.page,
-					feedbackType: feedback.feedbackType,
 				},
 			},
 			create: {
@@ -44,11 +43,14 @@ export async function createFeedback(feedback: FeedbackDto & { feedbackType: Fee
 				userId: feedback.userId,
 				feedbackType: feedback.feedbackType,
 			},
-			update: {},
+			update: {
+				feedbackType: feedback.feedbackType,
+			},
 		})
 		revalidatePath(routes.slideDecks.overview)
 	} catch (error) {
 		console.error('Error creating feedback', error)
+		throw error
 	}
 }
 
@@ -66,6 +68,7 @@ export async function deleteFeedback(feedback: FeedbackDto & { feedbackType: Fee
 		revalidatePath(routes.slideDecks.overview)
 	} catch (error) {
 		console.error('Error deleting feedback', error)
+		throw error
 	}
 }
 
