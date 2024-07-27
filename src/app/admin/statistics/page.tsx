@@ -12,6 +12,13 @@ export default async function Statistics() {
 
 			<div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 gap-4 mb-4">
 				<StatisticCardHighest
+					headline="Meiste Alles Verstanden"
+					totalQuestions={highestStats.everythingUnderstood.totalQuestions}
+					totalNothingUnderstood={highestStats.everythingUnderstood.totalNothingUnderstood}
+					totalEverythingUnderstood={highestStats.everythingUnderstood.totalEverythingUnderstood}
+					slideset={highestStats.everythingUnderstood.slideset}
+				/>
+				<StatisticCardHighest
 					headline="Meiste Fragen"
 					totalQuestions={highestStats.questions.totalQuestions}
 					totalNothingUnderstood={highestStats.questions.totalNothingUnderstood}
@@ -24,13 +31,6 @@ export default async function Statistics() {
 					totalNothingUnderstood={highestStats.nothingUnderstood.totalNothingUnderstood}
 					totalEverythingUnderstood={highestStats.nothingUnderstood.totalEverythingUnderstood}
 					slideset={highestStats.nothingUnderstood.slideset}
-				/>
-				<StatisticCardHighest
-					headline="Meiste Alles Verstanden"
-					totalQuestions={highestStats.everythingUnderstood.totalQuestions}
-					totalNothingUnderstood={highestStats.everythingUnderstood.totalNothingUnderstood}
-					totalEverythingUnderstood={highestStats.everythingUnderstood.totalEverythingUnderstood}
-					slideset={highestStats.everythingUnderstood.slideset}
 				/>
 				<StatisticCardHighest
 					headline="Meiste Probleme"
