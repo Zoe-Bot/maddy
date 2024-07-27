@@ -8,7 +8,12 @@ import { routes } from '../../services/routes'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 type Props = {
-	data: { label: string; nothingUnderstood: number; questions: number }[]
+	data: {
+		label: string
+		nothingUnderstood: number
+		questions: number
+		everythingUnderstood: number
+	}[]
 	xAxisLabel: string
 	slidesetId?: number
 }
@@ -30,6 +35,12 @@ export const BarChart: React.FC<Props> = ({ data, xAxisLabel, slidesetId }) => {
 				label: 'Nichts verstanden',
 				data: data.map((item) => item.nothingUnderstood),
 				backgroundColor: '#eb3f3f',
+				borderWidth: 0,
+			},
+			{
+				label: 'Alles verstanden',
+				data: data.map((item) => item.everythingUnderstood),
+				backgroundColor: '#16a34a',
 				borderWidth: 0,
 			},
 		],

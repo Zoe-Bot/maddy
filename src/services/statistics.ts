@@ -5,6 +5,7 @@ type SingleSlideSetStatistics = {
 	label: string
 	questions: number
 	nothingUnderstood: number
+	everythingUnderstood: number
 }
 
 export async function getSingleSlideSetChartData(slidesetId: number): Promise<SingleSlideSetStatistics[]> {
@@ -27,12 +28,14 @@ export async function getSingleSlideSetChartData(slidesetId: number): Promise<Si
 		const result = feedbackStats.reduce<Record<number, SingleSlideSetStatistics>>((acc, stat) => {
 			const page = stat.page
 			if (!acc[page]) {
-				acc[page] = { label: `${page}`, questions: 0, nothingUnderstood: 0 }
+				acc[page] = { label: `${page}`, questions: 0, nothingUnderstood: 0, everythingUnderstood: 0 }
 			}
 			if (stat.feedbackType === 'question') {
 				acc[page].questions += stat._count.feedbackType
 			} else if (stat.feedbackType === 'nothing_understood') {
 				acc[page].nothingUnderstood += stat._count.feedbackType
+			} else if (stat.feedbackType === 'everything_understood') {
+				acc[page].everythingUnderstood += stat._count.feedbackType
 			}
 			return acc
 		}, {})
@@ -48,6 +51,7 @@ export async function getSingleSlideSetChartData(slidesetId: number): Promise<Si
 type PageStats = {
 	totalQuestions: number
 	totalNothingUnderstood: number
+	totalEverythingUnderstood: number
 }
 
 type HighestStats = {
@@ -55,16 +59,25 @@ type HighestStats = {
 		page: number | null
 		totalQuestions: number
 		totalNothingUnderstood: number
+		totalEverythingUnderstood: number
 	}
 	nothingUnderstood: {
 		page: number | null
 		totalQuestions: number
 		totalNothingUnderstood: number
+		totalEverythingUnderstood: number
+	}
+	everythingUnderstood: {
+		page: number | null
+		totalQuestions: number
+		totalNothingUnderstood: number
+		totalEverythingUnderstood: number
 	}
 	problems: {
 		page: number | null
 		totalQuestions: number
 		totalNothingUnderstood: number
+		totalEverythingUnderstood: number
 	}
 }
 
@@ -89,6 +102,7 @@ export async function getSingleSlideSetHighestStats(slidesetId: number): Promise
 				pageStats[page] = {
 					totalQuestions: 0,
 					totalNothingUnderstood: 0,
+					totalEverythingUnderstood: 0,
 				}
 			}
 
@@ -96,19 +110,22 @@ export async function getSingleSlideSetHighestStats(slidesetId: number): Promise
 				pageStats[page].totalQuestions = _count.id
 			} else if (feedbackType === FeedbackType.nothing_understood) {
 				pageStats[page].totalNothingUnderstood = _count.id
+			} else if (feedbackType === FeedbackType.everything_understood) {
+				pageStats[page].totalEverythingUnderstood = _count.id
 			}
 		})
 
 		// Determine the highest stats
 		let highestStats: HighestStats = {
-			questions: { page: null, totalQuestions: 0, totalNothingUnderstood: 0 },
-			nothingUnderstood: { page: null, totalQuestions: 0, totalNothingUnderstood: 0 },
-			problems: { page: null, totalQuestions: 0, totalNothingUnderstood: 0 },
+			questions: { page: null, totalQuestions: 0, totalNothingUnderstood: 0, totalEverythingUnderstood: 0 },
+			nothingUnderstood: { page: null, totalQuestions: 0, totalNothingUnderstood: 0, totalEverythingUnderstood: 0 },
+			problems: { page: null, totalQuestions: 0, totalNothingUnderstood: 0, totalEverythingUnderstood: 0 },
+			everythingUnderstood: { page: null, totalQuestions: 0, totalNothingUnderstood: 0, totalEverythingUnderstood: 0 },
 		}
 
 		for (const [page, stats] of Object.entries(pageStats)) {
 			const pageNumber = parseInt(page)
-			const { totalQuestions, totalNothingUnderstood } = stats
+			const { totalQuestions, totalNothingUnderstood, totalEverythingUnderstood } = stats
 
 			// Check for the highest questions page
 			if (totalQuestions > highestStats.questions.totalQuestions) {
@@ -116,6 +133,7 @@ export async function getSingleSlideSetHighestStats(slidesetId: number): Promise
 					page: pageNumber,
 					totalQuestions,
 					totalNothingUnderstood,
+					totalEverythingUnderstood,
 				}
 			}
 
@@ -125,6 +143,17 @@ export async function getSingleSlideSetHighestStats(slidesetId: number): Promise
 					page: pageNumber,
 					totalQuestions,
 					totalNothingUnderstood,
+					totalEverythingUnderstood,
+				}
+			}
+
+			// Check for the highest everything understood page
+			if (totalEverythingUnderstood > highestStats.everythingUnderstood.totalEverythingUnderstood) {
+				highestStats.everythingUnderstood = {
+					page: pageNumber,
+					totalQuestions,
+					totalNothingUnderstood,
+					totalEverythingUnderstood,
 				}
 			}
 
@@ -137,6 +166,7 @@ export async function getSingleSlideSetHighestStats(slidesetId: number): Promise
 					page: pageNumber,
 					totalQuestions,
 					totalNothingUnderstood,
+					totalEverythingUnderstood,
 				}
 			}
 		}
@@ -145,9 +175,10 @@ export async function getSingleSlideSetHighestStats(slidesetId: number): Promise
 	} catch (error) {
 		console.error(error)
 		return {
-			questions: { page: null, totalQuestions: 0, totalNothingUnderstood: 0 },
-			nothingUnderstood: { page: null, totalQuestions: 0, totalNothingUnderstood: 0 },
-			problems: { page: null, totalQuestions: 0, totalNothingUnderstood: 0 },
+			questions: { page: null, totalQuestions: 0, totalNothingUnderstood: 0, totalEverythingUnderstood: 0 },
+			nothingUnderstood: { page: null, totalQuestions: 0, totalNothingUnderstood: 0, totalEverythingUnderstood: 0 },
+			problems: { page: null, totalQuestions: 0, totalNothingUnderstood: 0, totalEverythingUnderstood: 0 },
+			everythingUnderstood: { page: null, totalQuestions: 0, totalNothingUnderstood: 0, totalEverythingUnderstood: 0 },
 		}
 	}
 }
@@ -167,12 +198,20 @@ export async function getSingleSlideSetSumStats(slidesetId: number) {
 		},
 	})
 
+	const everythingUnderstoodCount = await prisma.feedback.count({
+		where: {
+			slidesetId: slidesetId,
+			feedbackType: 'everything_understood',
+		},
+	})
+
 	const problemsCount = questionsCount + nothingUnderstoodCount
 
 	const sumStats = {
 		questions: questionsCount,
 		nothingUnderstood: nothingUnderstoodCount,
 		problems: problemsCount,
+		everythingUnderstood: everythingUnderstoodCount,
 	}
 
 	return sumStats
@@ -180,10 +219,10 @@ export async function getSingleSlideSetSumStats(slidesetId: number) {
 
 export async function getSlideSetsChartData() {
 	try {
-		// Holen aller Slidesets
+		// Get all slidesets
 		const slidesets = await prisma.slideset.findMany()
 
-		// Holen der Anzahl der Fragen und "nothing understood" Feedbacks pro Slideset
+		// Get all feedbacks grouped by slidesetId and feedbackType
 		const feedbacks = await prisma.feedback.groupBy({
 			by: ['slidesetId', 'feedbackType'],
 			_count: {
@@ -191,14 +230,15 @@ export async function getSlideSetsChartData() {
 			},
 		})
 
-		// Initialisiere die Ergebnisse für jedes Slideset
+		// Initialize the results array with the slideset ids
 		const results = slidesets.map((slideset) => ({
 			label: slideset.id.toString(),
 			questions: 0,
 			nothingUnderstood: 0,
+			everythingUnderstood: 0,
 		}))
 
-		// Fülle die Ergebnisse mit den Feedback-Daten
+		// Fill the results array with the feedback counts
 		feedbacks.forEach((feedback) => {
 			const slidesetResult = results.find((result) => result.label === feedback.slidesetId.toString())
 			if (slidesetResult) {
@@ -206,6 +246,8 @@ export async function getSlideSetsChartData() {
 					slidesetResult.questions = feedback._count.slidesetId
 				} else if (feedback.feedbackType === 'nothing_understood') {
 					slidesetResult.nothingUnderstood = feedback._count.slidesetId
+				} else if (feedback.feedbackType === 'everything_understood') {
+					slidesetResult.everythingUnderstood = feedback._count.slidesetId
 				}
 			}
 		})
@@ -225,6 +267,7 @@ export async function getSlideSetsHighestStats() {
 		const mostQuestionsSlideset = allSlidesetStats.reduce((prev, current) => (prev.questions > current.questions ? prev : current))
 		const mostNothingUnderstoodSlideset = allSlidesetStats.reduce((prev, current) => (prev.nothingUnderstood > current.nothingUnderstood ? prev : current))
 		const mostProblemsSlideset = allSlidesetStats.reduce((prev, current) => (prev.questions + prev.nothingUnderstood > current.questions + current.nothingUnderstood ? prev : current))
+		const mostEverythingUnderstoodSlideset = allSlidesetStats.reduce((prev, current) => (prev.everythingUnderstood > current.everythingUnderstood ? prev : current))
 
 		const result = {
 			questions: {
@@ -234,6 +277,7 @@ export async function getSlideSetsHighestStats() {
 				},
 				totalQuestions: mostQuestionsSlideset.questions,
 				totalNothingUnderstood: mostQuestionsSlideset.nothingUnderstood,
+				totalEverythingUnderstood: mostQuestionsSlideset.everythingUnderstood,
 			},
 			nothingUnderstood: {
 				slideset: {
@@ -242,6 +286,16 @@ export async function getSlideSetsHighestStats() {
 				},
 				totalQuestions: mostNothingUnderstoodSlideset.questions,
 				totalNothingUnderstood: mostNothingUnderstoodSlideset.nothingUnderstood,
+				totalEverythingUnderstood: mostNothingUnderstoodSlideset.everythingUnderstood,
+			},
+			everythingUnderstood: {
+				slideset: {
+					id: Number(mostEverythingUnderstoodSlideset.label),
+					name: slidesets.find((s) => s.id.toString() === mostEverythingUnderstoodSlideset.label)!.name,
+				},
+				totalQuestions: mostEverythingUnderstoodSlideset.questions,
+				totalNothingUnderstood: mostEverythingUnderstoodSlideset.nothingUnderstood,
+				totalEverythingUnderstood: mostEverythingUnderstoodSlideset.everythingUnderstood,
 			},
 			problems: {
 				slideset: {
@@ -250,15 +304,17 @@ export async function getSlideSetsHighestStats() {
 				},
 				totalQuestions: mostProblemsSlideset.questions,
 				totalNothingUnderstood: mostProblemsSlideset.nothingUnderstood,
+				totalEverythingUnderstood: mostProblemsSlideset.everythingUnderstood,
 			},
 		}
 		return result
 	} catch (error) {
 		console.error(error)
 		return {
-			questions: { slideset: { id: 0, name: '' }, totalQuestions: 0, totalNothingUnderstood: 0 },
-			nothingUnderstood: { slideset: { id: 0, name: '' }, totalQuestions: 0, totalNothingUnderstood: 0 },
-			problems: { slideset: { id: 0, name: '' }, totalQuestions: 0, totalNothingUnderstood: 0 },
+			questions: { slideset: { id: 0, name: '' }, totalQuestions: 0, totalNothingUnderstood: 0, totalEverythingUnderstood: 0 },
+			nothingUnderstood: { slideset: { id: 0, name: '' }, totalQuestions: 0, totalNothingUnderstood: 0, totalEverythingUnderstood: 0 },
+			problems: { slideset: { id: 0, name: '' }, totalQuestions: 0, totalNothingUnderstood: 0, totalEverythingUnderstood: 0 },
+			everythingUnderstood: { slideset: { id: 0, name: '' }, totalQuestions: 0, totalNothingUnderstood: 0, totalEverythingUnderstood: 0 },
 		}
 	}
 }

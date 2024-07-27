@@ -40,6 +40,13 @@ export default async function SingleSlidesetStatistics({ params }: Params) {
 					page={highestStats.nothingUnderstood.page ?? 0}
 				/>
 				<StatisticCardHighestSingle
+					headline="Meiste Alles Verstanden"
+					totalQuestions={highestStats.everythingUnderstood.totalQuestions}
+					totalNothingUnderstood={highestStats.everythingUnderstood.totalNothingUnderstood}
+					slideSet={slideSet}
+					page={highestStats.everythingUnderstood.page ?? 0}
+				/>
+				<StatisticCardHighestSingle
 					headline="Meiste Probleme"
 					totalQuestions={highestStats.problems.totalQuestions}
 					totalNothingUnderstood={highestStats.problems.totalNothingUnderstood}
