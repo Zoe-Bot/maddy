@@ -26,10 +26,11 @@ model Feedback {
     feedbackType FeedbackType
     timestamp    DateTime     @default(now())
 
-    @@unique([userId, slidesetId, page, feedbackType])
+    @@unique([userId, slidesetId, page])
 }
 
 enum FeedbackType {
     question
     nothing_understood
+    everything_understood
 }
