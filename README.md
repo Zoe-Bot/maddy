@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Maddy - Feedback-Management-Tool für Vorlesungsfolien
 
-## Getting Started
+Maddy ist ein Tool zur Erfassung und Verwaltung von Feedback zu Vorlesungsfolien. Es wurde im Rahmen einer Bachelorarbeit an der Hochschule der Medien Stuttgart entwickelt.
 
-First, run the development server:
+## Beschreibung
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Das Tool ermöglicht es Studierenden, bei Vorlesungsfolien anzugeben, ob sie eine Folie verstanden haben, eine Frage zu einer Folie haben oder die Folie komplett nicht verstanden haben. Dozenten können neue Foliensätze hinzufügen und bearbeiten sowie Statistiken zum Verständnis der Studierenden einsehen.
+
+## Installation
+
+### Repository einrichten
+
+1. Repository klonen:
+
+```
+git clone git@github.com:Zoe-Bot/maddy.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Abhängigkeiten installieren:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+3. .env Datei erstellen und Inhalt aus example.env kopieren und anpassen
 
-## Learn More
+### Datenbank einrichten
 
-To learn more about Next.js, take a look at the following resources:
+1. Vercel Projekt erstellen und verknüpfen
+2. Vercel Postgres und Vercel Blob Store erstellen
+3. Umgebungsvariablen von Vercel in .env kopieren
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Weitere Informationen zur Einrichtung in der [Vercel Dokumentation](https://vercel.com/docs).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Befehle
 
-## Deploy on Vercel
+- Entwicklermodus starten:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Projekt bauen:
+
+```
+npm run build
+```
+
+- Datenbankschema aktualisieren:
+
+```
+npm run db-update
+```
+
+- Prisma Studio öffnen:
+
+```
+npm run prisma-studio
+```
+
+## Technologien
+
+- [Next.js](https://nextjs.org/) Framework
+- [Material UI (MUI)](https://mui.com/) für UI Komponenten
+- [Tailwind CSS](https://tailwindcss.com/) für CSS Utilities
+- [React-PDF](https://github.com/wojtekmaj/react-pdf) für die Darstellung der PDF-Folien
+- [PostgreSQL](https://www.postgresql.org/) Datenbank
+- [Prisma](https://www.prisma.io/nextjs) als ORM
+- [Vercel](https://vercel.com/) fürs Deployment
