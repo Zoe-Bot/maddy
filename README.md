@@ -4,7 +4,7 @@ Maddy ist ein Tool zur Erfassung und Verwaltung von Feedback zu Vorlesungsfolien
 
 ## Beschreibung
 
-Das Tool ermöglicht es Studierenden, bei Vorlesungsfolien anzugeben, ob sie eine Folie verstanden haben, eine Frage zu einer Folie haben oder die Folie komplett nicht verstanden haben. Dozenten können neue Foliensätze hinzufügen und bearbeiten sowie Statistiken zum Verständnis der Studierenden einsehen.
+Das Tool ermöglicht es Studierenden, bei Vorlesungsfolien anzugeben, ob sie eine Folie verstanden haben, eine Frage zu einer Folie haben oder die Folie komplett nicht verstanden haben. Dozenten können neue Foliensätze hinzufügen und bearbeiten, sowie Statistiken zum Verständnis der Studierenden einsehen.
 
 ## Installation
 
