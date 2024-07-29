@@ -10,6 +10,7 @@ import { login } from '../../services/auth'
 import { routes } from '../../services/routes'
 
 export default function LoginPage() {
+	const [isLoading, setIsLoading] = useState(false)
 	const [showPassword, setShowPassword] = useState(false)
 	const initialValues = {
 		password: '',
@@ -26,11 +27,13 @@ export default function LoginPage() {
 			<Formik
 				initialValues={initialValues}
 				onSubmit={async (values, helper) => {
+					setIsLoading(true)
 					const error = await login(values.password)
 
 					if (error) {
 						helper.setFieldError('password', error)
 					}
+					setIsLoading(false)
 				}}
 			>
 				<Form className="w-full">
@@ -61,7 +64,9 @@ export default function LoginPage() {
 					</Field>
 
 					<div className="flex flex-col gap-3">
-						<Button type="submit">Anmelden</Button>
+						<Button loading={isLoading} Icon={ArrowRightEndOnRectangleIcon} type="submit">
+							Anmelden
+						</Button>
 						<Link className="text-center text-gray-500 hover:text-gray-600" href={routes.slideDecks.overview}>
 							Zurück zur Übersicht
 						</Link>

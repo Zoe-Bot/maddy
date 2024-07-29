@@ -1,3 +1,4 @@
+import { AlertCardUpload } from '../../components/cards/AlertCardUpload'
 import { AdminSlideSetOverviewHeader } from '../../components/layout/header/AdminSlideSetOverviewHeader'
 import { SlideSetList } from '../../components/layout/SlidesetList'
 
@@ -8,6 +9,7 @@ export default function SlideOverview() {
 		<main className="container py-6">
 			<AdminSlideSetOverviewHeader />
 
+			<AlertCardUpload />
 			<SlideSetList isAdmin />
 		</main>
 	)

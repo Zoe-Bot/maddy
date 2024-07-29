@@ -39,14 +39,18 @@ export const SlideSetList: React.FC<Props> = async ({ isAdmin }) => {
 							</div>
 						</Link>
 
-						<Link
-							className="border-2 border-solid border-primary-600 hover:bg-primary-700 hover:bg-opacity-25 text-primary-600 font-semibold text-sm py-1 px-4 rounded-lg ml-4"
-							href={routes.admin.slideDecks.statistics(slideSet.id)}
-						>
-							Statistiken
-						</Link>
+						{isAdmin && (
+							<>
+								<Link
+									className="border-2 border-solid border-primary-600 hover:bg-primary-700 hover:bg-opacity-25 text-primary-600 font-semibold text-sm py-1 px-4 rounded-lg ml-4"
+									href={routes.admin.slideDecks.statistics(slideSet.id)}
+								>
+									Statistiken
+								</Link>
 
-						{isAdmin && <SlideSetListMenu slideSet={slideSet} />}
+								<SlideSetListMenu slideSet={slideSet} />
+							</>
+						)}
 					</div>
 				))}
 			</div>
