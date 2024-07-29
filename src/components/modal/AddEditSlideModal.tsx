@@ -3,8 +3,10 @@ import { IconButton, Modal, TextField } from '@mui/material'
 import { Slideset } from '@prisma/client'
 import { upload } from '@vercel/blob/client'
 import { Field, FieldProps, Form, Formik } from 'formik'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import * as yup from 'yup'
+import { routes } from '../../services/routes'
 import { deletePdfFile, updateSlideset } from '../../services/slideSet'
 import { Button } from '../button/Button'
 import { FormError } from '../errors/FormError'
@@ -24,6 +26,7 @@ export type SlideSetDto = {
 }
 
 export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slideset }) => {
+	const router = useRouter()
 	const isEditMode = Boolean(slideset)
 	const [shouldResetFile, setShouldResetFile] = useState<boolean>(false)
 	const [hasPdfFileEdited, setHasPdfFileEdited] = useState<boolean>(false)
@@ -81,6 +84,7 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slide
 						}
 
 						onClose()
+						router.replace(routes.admin.slideDecks.overview + `?action=upload`)
 					}}
 					validationSchema={validationSchema}
 				>
