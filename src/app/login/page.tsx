@@ -32,8 +32,8 @@ export default function LoginPage() {
 
 					if (error) {
 						helper.setFieldError('password', error)
+						setIsLoading(false)
 					}
-					setIsLoading(false)
 				}}
 			>
 				<Form className="w-full">
