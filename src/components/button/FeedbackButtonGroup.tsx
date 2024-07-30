@@ -47,9 +47,11 @@ export const FeedbackButtonGroup: React.FC<Props> = ({ slidesetId }) => {
 	useEffect(() => {
 		setIsLoadingTotalFeedback(true)
 		const getQuestionsAndNothingUnderstood = async () => {
-			const totalQuestions = await getQuestionFeedbacksPerSlidesetAndPage({ slidesetId, page: pageNumber })
-			const totalNothingUnderstood = await getNothingUnderstoodFeedbacksPerSlidesetAndPage({ slidesetId, page: pageNumber })
-			const totalEverythingUnderstood = await getEverythingUnderstoodFeedbacksPerSlidesetAndPage({ slidesetId, page: pageNumber })
+			const [totalQuestions, totalNothingUnderstood, totalEverythingUnderstood] = await Promise.all([
+				getQuestionFeedbacksPerSlidesetAndPage({ slidesetId, page: pageNumber }),
+				getNothingUnderstoodFeedbacksPerSlidesetAndPage({ slidesetId, page: pageNumber }),
+				getEverythingUnderstoodFeedbacksPerSlidesetAndPage({ slidesetId, page: pageNumber }),
+			])
 
 			setTotalQuestions(totalQuestions)
 			setTotalNothingUnderstood(totalNothingUnderstood)
