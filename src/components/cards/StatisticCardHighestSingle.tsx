@@ -28,9 +28,11 @@ export const StatisticCardHighestSingle: React.FC<Props> = ({ headline, totalQue
 					<Chip color="red">{totalNothingUnderstood} x</Chip>
 				</div>
 			</div>
-			<Document file={slideSet.pdfUrl}>
-				<Page pageNumber={page} width={230} />
-			</Document>
+			{page !== 0 && (
+				<Document file={slideSet.pdfUrl}>
+					<Page pageNumber={page} width={230} />
+				</Document>
+			)}
 			<Link className="absolute inset-0 h-full" href={routes.admin.slideDecks.single(slideSet.id, page)} />
 		</div>
 	)

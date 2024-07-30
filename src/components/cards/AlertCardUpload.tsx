@@ -12,7 +12,7 @@ export const AlertCardUpload: React.FC = () => {
 	return (
 		action === 'upload' && (
 			<Alert className="text-green-900 my-4" icon={<CheckIcon className="size-5" />} onClose={() => router.replace(routes.admin.slideDecks.overview)} severity="success">
-				Upload succesful. After progressing file will be displayed below.
+				Erstellung erfolgreich. Nachdem der Foliensatz verarbeitet wurde, wird er in der Übersicht angezeigt.
 			</Alert>
 		)
 	)
