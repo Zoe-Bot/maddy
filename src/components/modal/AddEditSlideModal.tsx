@@ -74,6 +74,7 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slide
 									description: values.description,
 								})
 							}
+							onClose()
 						} else {
 							// Create new slideset
 							await upload(values.name, values.pdf!, {
@@ -81,10 +82,10 @@ export const AddEditSlideModal: React.FC<Props> = ({ isModalOpen, onClose, slide
 								handleUploadUrl: '/api/slidesets/create',
 								clientPayload: JSON.stringify({ name: values.name, description: values.description }),
 							})
-						}
 
-						onClose()
-						router.replace(routes.admin.slideDecks.overview + `?action=upload`)
+							onClose()
+							router.replace(routes.admin.slideDecks.overview + `?action=upload`)
+						}
 					}}
 					validationSchema={validationSchema}
 				>
